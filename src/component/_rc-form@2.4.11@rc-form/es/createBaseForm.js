@@ -523,7 +523,7 @@ function createBaseForm(option, mixins) {
         var _this4 = this;
         // console.log('this.fieldsStore.getNestedAllFields()=',this.fieldsStore.getNestedAllFields())
         //点平注册字段 获取所有字段
-
+        console.log("maybeNestedFields==========", maybeNestedFields);
         var fields = this.fieldsStore.flattenRegisteredFields(
           maybeNestedFields
         );
@@ -556,9 +556,10 @@ function createBaseForm(option, mixins) {
       ) {
         // 获取 原来的 字段存储数据
         var fieldsMeta = this.fieldsStore.fieldsMeta;
+        console.log("changedValues==========", changedValues);
         //点平注册字段
         var values = this.fieldsStore.flattenRegisteredFields(changedValues);
-        console.log("values============", values);
+        console.log("setFieldsValue values============", values);
 
         var newFields = Object.keys(values).reduce(function (acc, name) {
           var isRegistered = fieldsMeta[name];
