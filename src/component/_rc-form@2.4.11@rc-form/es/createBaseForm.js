@@ -25,7 +25,7 @@ import {
   argumentContainer,
   // 拷贝返回一个新的对象
   identity,
-  //  正常化验证规则
+  // 获取验证规则
   normalizeValidateRules,
   //得到所有的验证触发器
   getValidateTriggers,
@@ -80,11 +80,11 @@ function createBaseForm(option, mixins) {
 
         var fields = mapPropsToFields && mapPropsToFields(this.props); //  存储表单项的值，错误文案等即时数据，重绘表单时props从this.fields取值
         console.log("fields=", fields);
-        debugger;
+        // debugger;
         // 创建字段仓库
         this.fieldsStore = createFieldsStore(fields || {});
 
-        this.instances = {};
+        this.instances = {}; // 字段实例存储
         this.cachedBind = {}; // 存储getFieldProps、getFieldDecorator方法经过数据处理后的原始配置值，{name:options}形式
         this.clearedFieldMetaCache = {}; // 清楚字段缓存
 
@@ -275,7 +275,7 @@ function createBaseForm(option, mixins) {
           },
         });
       },
-      //获取缓存绑定
+      // 组件事件绑定等收集
       getCacheBind: function getCacheBind(name, action, fn) {
         // 判断有没有绑定缓存，如果没有则先给一个空的对象
         if (!this.cachedBind[name]) {
@@ -293,24 +293,29 @@ function createBaseForm(option, mixins) {
         //返回缓存中的fn函数
         return cache[action].fn;
       },
-      // 用于和表单进行双向绑定，详见下方描述
+      // 用于和表单进行双向绑定，详见下方描述 装饰组件，促进双向绑定的修饰器
       getFieldDecorator: function getFieldDecorator(
         name, // 字段名称
         fieldOption // 字段设置参数
       ) {
         var _this2 = this;
-
+        // 创建待验证的表单 设置字段元数据，返回 计算被修饰组件的属性
         var props = this.getFieldProps(name, fieldOption);
-        return function (fieldElem) {
-          // We should put field in record if it is rendered
+        return function (
+          fieldElem // 组件 也可以理解为react 的 vnode 虚拟dom
+        ) {
+          // We should put field in record if it is rendered 如果字段被渲染，我们应该把它放在record中
           _this2.renderFields[name] = true;
-
+          // 获取初始化对象值
           var fieldMeta = _this2.fieldsStore.getFieldMeta(name);
-          var originalProps = fieldElem.props;
+          var originalProps = fieldElem.props; // 获取组件属性
+          // 如果不是上产环境 其实我们可以忽略警告日志
           if (process.env.NODE_ENV !== "production") {
+            // value 属性
             var valuePropName = fieldMeta.valuePropName;
+            // 警告 不能私自设置 value 属性 因为将会被getFieldDecorator 的value 覆盖
             warning(
-              !(valuePropName in originalProps),
+              !(valuePropName in originalProps), //
               "`getFieldDecorator` will override `" +
                 valuePropName +
                 "`, " +
@@ -330,19 +335,43 @@ function createBaseForm(option, mixins) {
                 " please use `option.initialValue` instead."
             );
           }
+          // 组件自身属性
           fieldMeta.originalProps = originalProps;
+          console.log("fieldElem==", fieldElem);
+          console.log("fieldElem.ref==", fieldElem.ref);
           fieldMeta.ref = fieldElem.ref; // 获取字段的value 值
+          console.log(" React.cloneElement=");
+          // 克隆一个 组件
+          console.log(
+            React.cloneElement(
+              fieldElem,
+              // props 属性
+              _extends(
+                {},
+                props,
+                // 获取字段的value 值
+                _this2.fieldsStore.getFieldValuePropValue(fieldMeta)
+              )
+            )
+          );
+          console.log(
+            "getFieldValuePropValue=",
+            // 获取字段的value 值
+            _this2.fieldsStore.getFieldValuePropValue(fieldMeta)
+          );
           return React.cloneElement(
-            fieldElem,
+            fieldElem, //原来的vnode
+            // props 属性
             _extends(
               {},
-              props,
+              props, // 用户传进来的 props 属性
+              // 获取value 属性值
               _this2.fieldsStore.getFieldValuePropValue(fieldMeta)
             )
           );
         };
       },
-      // 创建待验证的表单
+      // 创建待验证的表单 设置字段元数据，返回 计算被修饰组件的属性
       getFieldProps: function getFieldProps(name) {
         var _this3 = this;
         //用户字段参数选项 判断是否有一个参数
@@ -384,7 +413,7 @@ function createBaseForm(option, mixins) {
         );
 
         var rules = fieldOption.rules, // 字段验证规则
-          trigger = fieldOption.trigger, //收集子节点的值的时机
+          trigger = fieldOption.trigger, //收集子节点的值的时机 change
           _fieldOption$validate = fieldOption.validateTrigger, //校验子节点值的时机
           validateTrigger =
             _fieldOption$validate === undefined
@@ -415,16 +444,19 @@ function createBaseForm(option, mixins) {
         console.log("validate=", validate);
         console.log("rules=", rules);
         console.log("validateTrigger=", validateTrigger);
-        debugger;
+
+        // 获取验证规则
         var validateRules = normalizeValidateRules(
           validate, // 空数组
           rules, // 校验 规则
           validateTrigger //校验子节点值的时机   //onChange 收集子节点的值的时机
         );
+        //得到所有的验证触发器
         var validateTriggers = getValidateTriggers(validateRules);
+        console.log("validateTriggers=", validateTriggers);
         validateTriggers.forEach(function (action) {
           if (inputProps[action]) return;
-          //获取缓存绑定
+          //获取缓存绑定 change 事件
           inputProps[action] = _this3.getCacheBind(
             name,
             action,
@@ -432,33 +464,41 @@ function createBaseForm(option, mixins) {
           );
         });
 
-        // make sure that the value will be collect
+        // make sure that the value will be collect 确保该值将被收集
         if (trigger && validateTriggers.indexOf(trigger) === -1) {
-          //获取缓存绑定
+          //获取缓存绑定 change
           inputProps[trigger] = this.getCacheBind(
             name,
             trigger,
             this.onCollect
           );
         }
-
+        // 合并验证规则到fieldMeta 对象中
         var meta = _extends({}, fieldMeta, fieldOption, {
           validate: validateRules,
         });
+        // 重新设置fieldMeta
         this.fieldsStore.setFieldMeta(name, meta);
+        console.log("fieldMetaProp=", fieldMetaProp);
+        // debugger;
         if (fieldMetaProp) {
+          //该选项一般不会传递
           inputProps[fieldMetaProp] = meta;
         }
 
         if (fieldDataProp) {
+          // 字段的props属性
+          //忽略改选项
           inputProps[fieldDataProp] = this.fieldsStore.getField(name);
         }
 
-        // This field is rendered, record it
+        // This field is rendered, record it 记录是否被渲染
         this.renderFields[name] = true;
-
+        // 返回组件属性
+        console.log("inputProps=", inputProps);
         return inputProps;
       },
+      // 获取字段实例
       getFieldInstance: function getFieldInstance(name) {
         return this.instances[name];
       },
@@ -482,13 +522,15 @@ function createBaseForm(option, mixins) {
       setFields: function setFields(maybeNestedFields, callback) {
         var _this4 = this;
         // console.log('this.fieldsStore.getNestedAllFields()=',this.fieldsStore.getNestedAllFields())
-        //点平注册字段
+        //点平注册字段 获取所有字段
+
         var fields = this.fieldsStore.flattenRegisteredFields(
           maybeNestedFields
         );
+        console.log("setFields fields==========", fields);
         // 设置字段
         this.fieldsStore.setFields(fields);
-
+        // 拓展参数
         if (onFieldsChange) {
           var changedFields = Object.keys(fields).reduce(function (acc, name) {
             return set(acc, name, _this4.fieldsStore.getField(name));
@@ -506,10 +548,18 @@ function createBaseForm(option, mixins) {
         // 强制更新 render
         this.forceUpdate(callback);
       },
-      setFieldsValue: function setFieldsValue(changedValues, callback) {
+      setFieldsValue: function setFieldsValue(
+        // 改变的值 对象类型  {[key]:newValue}
+        changedValues,
+        // 回调函数
+        callback
+      ) {
+        // 获取 原来的 字段存储数据
         var fieldsMeta = this.fieldsStore.fieldsMeta;
-
+        //点平注册字段
         var values = this.fieldsStore.flattenRegisteredFields(changedValues);
+        console.log("values============", values);
+
         var newFields = Object.keys(values).reduce(function (acc, name) {
           var isRegistered = fieldsMeta[name];
           if (process.env.NODE_ENV !== "production") {

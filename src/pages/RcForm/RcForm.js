@@ -12,15 +12,15 @@ class RcForm extends React.Component {
   // };
 
   submit = (e) => {
-    // this.props.form.resetFields(["required"]);
+    // this.props.form.resetFields(["note"]);
     console.log("this.props.form=", this.props.form);
 
-    // this.props.form.setFields({
-    //   required: {
-    //     value: 123,
-    //     errors: [new Error("forbid ha")],
-    //   },
-    // });
+    this.props.form.setFields({
+      "note.tree": {
+        value: 123,
+        // errors: [new Error("forbid ha")],
+      },
+    });
 
     // setTimeout(() => {
     this.props.form.validateFields((error, value) => {
@@ -34,10 +34,10 @@ class RcForm extends React.Component {
     // }, 100);
   };
   componentDidMount() {
-    // this.props.form.setFieldsValue({
-    //   normal: "123",
-    //   required: "456",
-    // });
+    this.props.form.setFieldsValue({
+      age: "29",
+      name: "姚观寿",
+    });
   }
   render() {
     let errors;
@@ -55,10 +55,10 @@ class RcForm extends React.Component {
           <input {...getFieldProps("normal")} />
           {/* <Input></Input> */}
           <Form.Item label="Note">
-            {getFieldDecorator("note", {
+            {getFieldDecorator("note.tree", {
               rules: [{ required: true, message: "Please input your note!" }],
             })(<Input />)}
-            {(errors = getFieldError("note")) ? errors.join(",") : null}
+            {(errors = getFieldError("note.tree")) ? errors.join(",") : null}
           </Form.Item>
           <Form.Item label="age">
             {getFieldDecorator("age", {
