@@ -52,7 +52,7 @@ class RcForm extends React.Component {
           {/* {
           console.log({...getFieldProps('123')})
         } */}
-          <input {...getFieldProps("normal")} />
+          <input ref="ref_normal" {...getFieldProps("normal")} />
           {/* <Input></Input> */}
           <Form.Item label="Note">
             {getFieldDecorator("note.tree", {

@@ -14,6 +14,7 @@ import AsyncValidator from "async-validator";
 import warning from "warning";
 import get from "lodash/get";
 import set from "lodash/set";
+// 判断两个值是否相等
 import eq from "lodash/eq";
 // 实例化一个字段存储
 import createFieldsStore from "./createFieldsStore";
@@ -86,7 +87,7 @@ function createBaseForm(option, mixins) {
 
         this.instances = {}; // 字段实例存储
         this.cachedBind = {}; // 存储getFieldProps、getFieldDecorator方法经过数据处理后的原始配置值，{name:options}形式
-        this.clearedFieldMetaCache = {}; // 清楚字段缓存
+        this.clearedFieldMetaCache = {}; // 清除字段缓存
 
         this.renderFields = {};
         this.domFields = {};
@@ -179,7 +180,7 @@ function createBaseForm(option, mixins) {
               // 数组去重
               _toConsumableArray(args)
             );
-        // 如果值不相同
+        // 如果表单有传递onValuesChange 函数进来 则触发
         if (onValuesChange && value !== this.fieldsStore.getFieldValue(name)) {
           // 获取所有值
           var valuesAll = this.fieldsStore.getAllValues();
@@ -190,6 +191,7 @@ function createBaseForm(option, mixins) {
             //设置值
             return set(valuesAllSet, key, valuesAll[key]);
           });
+          // 更新值
           onValuesChange(
             // 浅拷贝
             _extends(
@@ -339,7 +341,8 @@ function createBaseForm(option, mixins) {
           fieldMeta.originalProps = originalProps;
           console.log("fieldElem==", fieldElem);
           console.log("fieldElem.ref==", fieldElem.ref);
-          fieldMeta.ref = fieldElem.ref; // 获取字段的value 值
+          debugger;
+          fieldMeta.ref = fieldElem.ref; // 获取组件的ref
           console.log(" React.cloneElement=");
           // 克隆一个 组件
           console.log(
@@ -522,20 +525,21 @@ function createBaseForm(option, mixins) {
       setFields: function setFields(maybeNestedFields, callback) {
         var _this4 = this;
         // console.log('this.fieldsStore.getNestedAllFields()=',this.fieldsStore.getNestedAllFields())
-        //点平注册字段 获取所有字段
+        //点平注册字段 判断传进来的字段是否在已经创建的字段中
         console.log("maybeNestedFields==========", maybeNestedFields);
         var fields = this.fieldsStore.flattenRegisteredFields(
           maybeNestedFields
         );
         console.log("setFields fields==========", fields);
-        // 设置字段
+        //   设置字段 新的值
         this.fieldsStore.setFields(fields);
-        // 拓展参数
+        // 拓展参数如果有字段改变则触发， 如果有字段改变
         if (onFieldsChange) {
+          // 获取 改变的字段
           var changedFields = Object.keys(fields).reduce(function (acc, name) {
             return set(acc, name, _this4.fieldsStore.getField(name));
           }, {});
-
+          // 更新字段
           onFieldsChange(
             _extends(
               _defineProperty({}, formPropName, this.getForm()),
@@ -557,70 +561,91 @@ function createBaseForm(option, mixins) {
         // 获取 原来的 字段存储数据
         var fieldsMeta = this.fieldsStore.fieldsMeta;
         console.log("changedValues==========", changedValues);
-        //点平注册字段
+        //点平注册字段 判断传进来的字段是否在已经创建的字段中
         var values = this.fieldsStore.flattenRegisteredFields(changedValues);
         console.log("setFieldsValue values============", values);
-
+        // 获取新的值
         var newFields = Object.keys(values).reduce(function (acc, name) {
-          var isRegistered = fieldsMeta[name];
+          var isRegistered = fieldsMeta[name]; // 是否已经注册过
+          console.log("isRegistered==", isRegistered);
           if (process.env.NODE_ENV !== "production") {
             warning(
-              isRegistered,
+              isRegistered, // 如果isRegistered 为假，则没有注册该字段 则发出警告日志
               "Cannot use `setFieldsValue` until " +
                 "you use `getFieldDecorator` or `getFieldProps` to register it."
             );
           }
           if (isRegistered) {
+            //是否已经注册过，如果已经注册过则重新设置值
             var value = values[name];
             acc[name] = {
-              value: value,
+              value: value, //新的值
             };
           }
-          return acc;
+          return acc; // 返回新的值
         }, {});
-        // 设置字段
+        // 设置字段 新的值
         this.setFields(newFields, callback);
+        // 如果表单有传递onValuesChange 函数进来 则触发
         if (onValuesChange) {
+          // 获取全部字段值的函数  返回是对象 {key:value} 数据形式
           var allValues = this.fieldsStore.getAllValues();
+          // 更新值
           onValuesChange(
             _extends(
               _defineProperty({}, formPropName, this.getForm()),
               this.props
             ),
-            changedValues,
-            allValues
+            changedValues, //新改变的值
+            allValues //全部值
           );
         }
       },
+      // 保存 ref
       saveRef: function saveRef(name, _, component) {
+        // 如果组件不存在
         if (!component) {
+          // 获取 字段的 _fieldMeta 对象
           var _fieldMeta = this.fieldsStore.getFieldMeta(name);
+          // 保存
           if (!_fieldMeta.preserve) {
             // after destroy, delete data 销毁后，删除数据
+            // 记录 销毁 FieldMetaCache 缓存，意思是记录该字段已经被销毁了
             this.clearedFieldMetaCache[name] = {
               field: this.fieldsStore.getField(name),
               meta: _fieldMeta,
             };
+            // 清除字段Field
             this.clearField(name);
           }
           delete this.domFields[name];
           return;
         }
+
         this.domFields[name] = true;
+        // 删除  记录销毁缓存 中的 Field 数据，并且重新设置 Field
         this.recoverClearedField(name);
+        // 获取FieldMeta 对象
         var fieldMeta = this.fieldsStore.getFieldMeta(name);
+        console.log("fieldMeta=", fieldMeta);
+
         if (fieldMeta) {
+          // 获取ref
           var ref = fieldMeta.ref;
           if (ref) {
             if (typeof ref === "string") {
+              //不可以设置ref 为字符串
               throw new Error("can not set ref string for " + name);
             } else if (typeof ref === "function") {
+              // 如果ref 是函数
               ref(component);
             } else if (Object.prototype.hasOwnProperty.call(ref, "current")) {
+              // 如果 ref 还有属性current
               ref.current = component;
             }
           }
         }
+        // 记录组件的实例
         this.instances[name] = component;
       },
       // 清理无用的字段
@@ -651,13 +676,14 @@ function createBaseForm(option, mixins) {
         delete this.instances[name];
         delete this.cachedBind[name];
       },
+      // 重置字段
       resetFields: function resetFields(ns) {
         var _this6 = this;
         // 重置值 但是  initialValue 没能重置 可能是一个bug  // 重置字段的值
         var newFields = this.fieldsStore.resetFields(ns);
 
         if (Object.keys(newFields).length > 0) {
-          // 设置字段
+          // 设置字段 重新设置值
           this.setFields(newFields);
         }
         if (ns) {
@@ -666,32 +692,38 @@ function createBaseForm(option, mixins) {
             return delete _this6.clearedFieldMetaCache[name];
           });
         } else {
+          // 清理缓存FieldMeta
           this.clearedFieldMetaCache = {};
         }
       },
+      // 删除  记录销毁缓存 中的 Field 数据，并且重新设置 Field
       recoverClearedField: function recoverClearedField(name) {
+        // 判断字段是否已经被销毁了
         if (this.clearedFieldMetaCache[name]) {
+          //   重新设置字段 新的值
           this.fieldsStore.setFields(
             _defineProperty({}, name, this.clearedFieldMetaCache[name].field)
           );
+          //重新设置 Meta 对象
           this.fieldsStore.setFieldMeta(
             name,
             this.clearedFieldMetaCache[name].meta
           );
+          // 删除clearedFieldMetaCache 对象中记录的字段
           delete this.clearedFieldMetaCache[name];
         }
       },
-      //内部验证字段
+      //字段内部验证字段
       validateFieldsInternal: function validateFieldsInternal(
-        fields, // 字段
+        fields, //  需要校验的字段
         _ref,
         callback // 回调函数
       ) {
         var _this7 = this;
 
         var fieldNames = _ref.fieldNames, // 字段名称
-          action = _ref.action,
-          _ref$options = _ref.options, //
+          action = _ref.action, // 字段事件 一般为onchange
+          _ref$options = _ref.options, //  getFieldDecorator 参数
           options = _ref$options === undefined ? {} : _ref$options;
 
         var allRules = {}; // 校验规则
@@ -703,6 +735,7 @@ function createBaseForm(option, mixins) {
           // 获取字段名称
           var name = field.name;
           if (options.force !== true && field.dirty === false) {
+            // 字段错误信息
             if (field.errors) {
               // 如果有错误信息存起来
               set(alreadyErrors, name, { errors: field.errors });
@@ -728,111 +761,140 @@ function createBaseForm(option, mixins) {
         });
         // 设置字段
         this.setFields(allFields);
-        // in case normalize
+        // in case normalize 以防正常化  获取全部值
         Object.keys(allValues).forEach(function (f) {
+          // 获取值
           allValues[f] = _this7.fieldsStore.getFieldValue(f);
         });
+        //判断对象是否是空对象
         if (callback && isEmptyObject(allFields)) {
           callback(
             isEmptyObject(alreadyErrors) ? null : alreadyErrors,
+            // 字段值
             this.fieldsStore.getFieldsValue(fieldNames)
           );
           return;
         }
+        // 异步验证
         var validator = new AsyncValidator(allRules);
+        //整个表单校验信息
         if (validateMessages) {
           validator.messages(validateMessages);
         }
-        validator.validate(allValues, options, function (errors) {
-          var errorsGroup = _extends({}, alreadyErrors);
-          if (errors && errors.length) {
-            errors.forEach(function (e) {
-              var errorFieldName = e.field;
-              var fieldName = errorFieldName;
+        validator.validate(
+          allValues, // 全部值
+          options, // 选项
+          // 错误信息回调函数
+          function (errors) {
+            // 获取错误信息
+            var errorsGroup = _extends({}, alreadyErrors);
+            // 如果错误信息存在
+            if (errors && errors.length) {
+              // 循环错误信息
+              errors.forEach(function (e) {
+                //获取字段
+                var errorFieldName = e.field;
 
-              // Handle using array validation rule.
-              // ref: https://github.com/ant-design/ant-design/issues/14275
-              Object.keys(allRules).some(function (ruleFieldName) {
-                var rules = allRules[ruleFieldName] || [];
+                var fieldName = errorFieldName;
 
-                // Exist if match rule
-                if (ruleFieldName === errorFieldName) {
-                  fieldName = ruleFieldName;
-                  return true;
-                }
+                // Handle using array validation rule. 句柄使用数组验证规则。
+                // ref: https://github.com/ant-design/ant-design/issues/14275
+                //如果有一个元素满足条件，则表达式返回true , 剩余的元素不会再执行检测。
+                Object.keys(allRules).some(function (ruleFieldName) {
+                  var rules = allRules[ruleFieldName] || [];
 
-                // Skip if not match array type
-                if (
-                  rules.every(function (_ref2) {
-                    var type = _ref2.type;
-                    return type !== "array";
-                  }) ||
-                  errorFieldName.indexOf(ruleFieldName + ".") !== 0
-                ) {
+                  // Exist if match rule 如果匹配规则存在
+                  if (ruleFieldName === errorFieldName) {
+                    fieldName = ruleFieldName;
+                    return true;
+                  }
+
+                  // Skip if not match array type 如果不匹配数组类型，则跳过
+                  if (
+                    //如果全部元素满足条件，则表达式返回true ,
+                    rules.every(function (_ref2) {
+                      var type = _ref2.type;
+                      return type !== "array";
+                    }) ||
+                    // 检查 xxx.
+                    errorFieldName.indexOf(ruleFieldName + ".") !== 0
+                  ) {
+                    return false;
+                  }
+
+                  // Exist if match the field name 如果匹配字段名称，则存在
+                  var restPath = errorFieldName.slice(ruleFieldName.length + 1);
+                  if (/^\d+$/.test(restPath)) {
+                    fieldName = ruleFieldName;
+                    return true;
+                  }
+
                   return false;
-                }
-
-                // Exist if match the field name
-                var restPath = errorFieldName.slice(ruleFieldName.length + 1);
-                if (/^\d+$/.test(restPath)) {
-                  fieldName = ruleFieldName;
-                  return true;
-                }
-
-                return false;
-              });
-
-              var field = get(errorsGroup, fieldName);
-              if (typeof field !== "object" || Array.isArray(field)) {
-                set(errorsGroup, fieldName, { errors: [] });
-              }
-              var fieldErrors = get(errorsGroup, fieldName.concat(".errors"));
-              fieldErrors.push(e);
-            });
-          }
-          var expired = [];
-          var nowAllFields = {};
-          Object.keys(allRules).forEach(function (name) {
-            var fieldErrors = get(errorsGroup, name);
-            var nowField = _this7.fieldsStore.getField(name);
-            // avoid concurrency problems
-            if (!eq(nowField.value, allValues[name])) {
-              expired.push({
-                name: name,
-              });
-            } else {
-              nowField.errors = fieldErrors && fieldErrors.errors;
-              nowField.value = allValues[name];
-              nowField.validating = false;
-              nowField.dirty = false;
-              nowAllFields[name] = nowField;
-            }
-          });
-          _this7.setFields(nowAllFields);
-          if (callback) {
-            if (expired.length) {
-              expired.forEach(function (_ref3) {
-                var name = _ref3.name;
-
-                var fieldErrors = [
-                  {
-                    message: name + " need to revalidate",
-                    field: name,
-                  },
-                ];
-                set(errorsGroup, name, {
-                  expired: true,
-                  errors: fieldErrors,
                 });
+
+                var field = get(errorsGroup, fieldName);
+                if (typeof field !== "object" || Array.isArray(field)) {
+                  // 记录错误字段
+                  set(errorsGroup, fieldName, { errors: [] });
+                }
+                var fieldErrors = get(errorsGroup, fieldName.concat(".errors"));
+                //收集错误信息
+                fieldErrors.push(e);
               });
             }
+            var expired = [];
+            var nowAllFields = {};
+            // 循环校验规则
+            Object.keys(allRules).forEach(function (name) {
+              //获取错误字段
+              var fieldErrors = get(errorsGroup, name);
+              // 获取当前字段
+              var nowField = _this7.fieldsStore.getField(name);
+              // avoid concurrency problems 避免并发问题
+              //判断两个值是否相等
+              if (!eq(nowField.value, allValues[name])) {
+                // 如果不相等
+                expired.push({
+                  name: name,
+                });
+              } else {
+                //如果相等
+                nowField.errors = fieldErrors && fieldErrors.errors;
+                nowField.value = allValues[name];
+                nowField.validating = false;
+                nowField.dirty = false;
+                nowAllFields[name] = nowField;
+              }
+            });
+            // 设置字段
+            _this7.setFields(nowAllFields);
+            if (callback) {
+              //如果有值不相等，则需要重新校验一次
+              if (expired.length) {
+                expired.forEach(function (_ref3) {
+                  var name = _ref3.name;
 
-            callback(
-              isEmptyObject(errorsGroup) ? null : errorsGroup,
-              _this7.fieldsStore.getFieldsValue(fieldNames)
-            );
+                  var fieldErrors = [
+                    {
+                      message: name + " need to revalidate", //需要重新验证
+                      field: name,
+                    },
+                  ];
+                  // 记录是否有错误信息
+                  set(errorsGroup, name, {
+                    expired: true,
+                    errors: fieldErrors,
+                  });
+                });
+              }
+              // 回调函数
+              callback(
+                isEmptyObject(errorsGroup) ? null : errorsGroup,
+                _this7.fieldsStore.getFieldsValue(fieldNames)
+              );
+            }
           }
-        });
+        );
       },
       validateFields: function validateFields(ns, opt, cb) {
         var _this8 = this;

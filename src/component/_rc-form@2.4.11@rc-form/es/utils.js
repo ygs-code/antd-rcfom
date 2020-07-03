@@ -48,7 +48,6 @@ export function treeTraverse() {
   /*
    //检查obj实例是否是Field的构造函数 isFormField
    // flattenFields  // 获取循环的字段判断是否存在当前的字段中
-
   */
   if (isLeafNode(path, tree)) {
     //

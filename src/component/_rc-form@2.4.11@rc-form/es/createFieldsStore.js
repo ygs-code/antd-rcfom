@@ -64,7 +64,7 @@ var FieldsStore = (function () {
       },
     },
     {
-      //点平注册字段
+      //点平注册字段 判断传进来的字段是否在已经创建的字段中
       key: "flattenRegisteredFields",
       value: function flattenRegisteredFields(fields) {
         console.log("flattenRegisteredFields=", fields);
@@ -83,7 +83,7 @@ var FieldsStore = (function () {
       },
     },
     {
-      // 设置字段
+      // 设置字段 新的值
       key: "setFields",
       value: function setFields(fields) {
         var _this = this;
@@ -428,7 +428,7 @@ var _initialiseProps = function _initialiseProps() {
       }
     });
   };
-  // 获取全部字段值的函数
+  // 获取全部字段值的函数  返回是对象 {key:value} 数据形式
   this.getAllValues = function () {
     var fieldsMeta = _this6.fieldsMeta,
       fields = _this6.fields;
