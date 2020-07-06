@@ -1,4 +1,5 @@
 import _objectWithoutProperties from "babel-runtime/helpers/objectWithoutProperties";
+// 为对象添加 描述设置属性
 import _defineProperty from "babel-runtime/helpers/defineProperty";
 import _extends from "babel-runtime/helpers/extends";
 // 数组去重
@@ -62,7 +63,7 @@ function createBaseForm(option, mixins) {
     fieldDataProp = option.fieldDataProp, //在哪里存储字段数据
     _option$formPropName = option.formPropName,
     formPropName =
-      _option$formPropName === undefined ? "form" : _option$formPropName,
+      _option$formPropName === undefined ? "form" : _option$formPropName, // props 的key 默认为form
     formName = option.name, // 表单名称
     withRef = option.withRef; //为包装的组件实例userefs维护一个ref。wrappedComponentto访问。
 
@@ -81,7 +82,7 @@ function createBaseForm(option, mixins) {
 
         var fields = mapPropsToFields && mapPropsToFields(this.props); //  存储表单项的值，错误文案等即时数据，重绘表单时props从this.fields取值
         console.log("fields=", fields);
-        // debugger;
+        debugger;
         // 创建字段仓库
         this.fieldsStore = createFieldsStore(fields || {});
 
@@ -195,6 +196,7 @@ function createBaseForm(option, mixins) {
           onValuesChange(
             // 浅拷贝
             _extends(
+              // 为对象添加 描述设置属性
               _defineProperty({}, formPropName, this.getForm()),
               this.props
             ),
@@ -243,7 +245,10 @@ function createBaseForm(option, mixins) {
           dirty: hasRules(validate),
         });
         // 设置字段
-        this.setFields(_defineProperty({}, name, newField));
+        this.setFields(
+          // 为对象添加 描述设置属性
+          _defineProperty({}, name, newField)
+        );
       },
       // 收集验证
       onCollectValidate: function onCollectValidate(name_, action) {
@@ -273,7 +278,7 @@ function createBaseForm(option, mixins) {
         this.validateFieldsInternal([newField], {
           action: action,
           options: {
-            firstFields: !!fieldMeta.validateFirst,
+            firstFields: !!fieldMeta.validateFirst, //当某一规则校验不通过时，是否停止剩下的规则的校验
           },
         });
       },
@@ -341,7 +346,7 @@ function createBaseForm(option, mixins) {
           fieldMeta.originalProps = originalProps;
           console.log("fieldElem==", fieldElem);
           console.log("fieldElem.ref==", fieldElem.ref);
-          debugger;
+          // debugger;
           fieldMeta.ref = fieldElem.ref; // 获取组件的ref
           console.log(" React.cloneElement=");
           // 克隆一个 组件
@@ -542,6 +547,7 @@ function createBaseForm(option, mixins) {
           // 更新字段
           onFieldsChange(
             _extends(
+              // 为对象添加 描述设置属性
               _defineProperty({}, formPropName, this.getForm()),
               this.props
             ),
@@ -552,6 +558,7 @@ function createBaseForm(option, mixins) {
         // 强制更新 render
         this.forceUpdate(callback);
       },
+      // 设置字段值
       setFieldsValue: function setFieldsValue(
         // 改变的值 对象类型  {[key]:newValue}
         changedValues,
@@ -593,6 +600,7 @@ function createBaseForm(option, mixins) {
           // 更新值
           onValuesChange(
             _extends(
+              // 为对象添加 描述设置属性
               _defineProperty({}, formPropName, this.getForm()),
               this.props
             ),
@@ -647,6 +655,8 @@ function createBaseForm(option, mixins) {
         }
         // 记录组件的实例
         this.instances[name] = component;
+        console.log("component=", component);
+        debugger;
       },
       // 清理无用的字段
       cleanUpUselessFields: function cleanUpUselessFields() {
@@ -655,6 +665,7 @@ function createBaseForm(option, mixins) {
         var fieldList = this.fieldsStore.getAllFieldsName();
         console.log("fieldList=", fieldList);
         var removedList = fieldList.filter(function (field) {
+          // 获取字段Meta对象
           var fieldMeta = _this5.fieldsStore.getFieldMeta(field);
           // 判断如果不存在renderFields 或者 domFields 或者 fieldMeta.preserve 为假的时候
           return (
@@ -702,6 +713,7 @@ function createBaseForm(option, mixins) {
         if (this.clearedFieldMetaCache[name]) {
           //   重新设置字段 新的值
           this.fieldsStore.setFields(
+            // 为对象添加 描述设置属性
             _defineProperty({}, name, this.clearedFieldMetaCache[name].field)
           );
           //重新设置 Meta 对象
@@ -831,7 +843,7 @@ function createBaseForm(option, mixins) {
 
                   return false;
                 });
-
+                // 获取字段
                 var field = get(errorsGroup, fieldName);
                 if (typeof field !== "object" || Array.isArray(field)) {
                   // 记录错误字段
@@ -896,33 +908,43 @@ function createBaseForm(option, mixins) {
           }
         );
       },
+      //验证字段,返回promise
       validateFields: function validateFields(ns, opt, cb) {
         var _this8 = this;
 
         var pending = new Promise(function (resolve, reject) {
+          // 得到参数，格式化整理转义参数
           var _getParams = getParams(ns, opt, cb),
+            // 获取参数的names
             names = _getParams.names,
+            // 获取参数的options 选项
             options = _getParams.options;
-
+          // 得到参数，格式化整理转义参数
           var _getParams2 = getParams(ns, opt, cb),
+            // 获取参数的回调函数
             callback = _getParams2.callback;
-
+          // 如果回调函数
           if (!callback || typeof callback === "function") {
             var oldCb = callback;
             callback = function callback(errors, values) {
               if (oldCb) {
+                // 执行回调函数
                 oldCb(errors, values);
               }
               if (errors) {
+                // 如果有错误则执行reject
                 reject({ errors: errors, values: values });
               } else {
+                // 成功执行
                 resolve(values);
               }
             };
           }
+          // 获取字段名称        从所有字段中 过滤出 maybePartialName 参数匹配到的字段
           var fieldNames = names
             ? _this8.fieldsStore.getValidFieldsFullName(names)
             : _this8.fieldsStore.getValidFieldsName();
+          // 获取含有检验规则的字段
           var fields = fieldNames
             .filter(function (name) {
               var fieldMeta = _this8.fieldsStore.getFieldMeta(name);
@@ -930,18 +952,24 @@ function createBaseForm(option, mixins) {
               return hasRules(fieldMeta.validate);
             })
             .map(function (name) {
+              //获取字段
               var field = _this8.fieldsStore.getField(name);
+              // 获取字段的值
               field.value = _this8.fieldsStore.getFieldValue(name);
+              // 返回字段
               return field;
             });
+          console.log("validateFields fields=", fields);
+          // 如果没有校验字段
           if (!fields.length) {
+            // 获取字段值
             callback(null, _this8.fieldsStore.getFieldsValue(fieldNames));
             return;
           }
           if (!("firstFields" in options)) {
             options.firstFields = fieldNames.filter(function (name) {
               var fieldMeta = _this8.fieldsStore.getFieldMeta(name);
-              return !!fieldMeta.validateFirst;
+              return !!fieldMeta.validateFirst; //当某一规则校验不通过时，是否停止剩下的规则的校验
             });
           }
           //内部验证字段
@@ -954,6 +982,7 @@ function createBaseForm(option, mixins) {
             callback
           );
         });
+        //俘获错误
         pending["catch"](function (e) {
           // eslint-disable-next-line no-console
           if (console.error && process.env.NODE_ENV !== "production") {
@@ -964,6 +993,7 @@ function createBaseForm(option, mixins) {
         });
         return pending;
       },
+      // 是否在 提交状态
       isSubmitting: function isSubmitting() {
         if (
           process.env.NODE_ENV !== "production" &&
@@ -977,6 +1007,7 @@ function createBaseForm(option, mixins) {
         }
         return this.state.submitting;
       },
+      // 表单提交函数
       submit: function submit(callback) {
         var _this9 = this;
 
@@ -1000,12 +1031,30 @@ function createBaseForm(option, mixins) {
         });
         callback(fn);
       },
+
+      // 渲染组件
       render: function render() {
         var _props = this.props,
           wrappedComponentRef = _props.wrappedComponentRef,
+          // 方法会返回一个布尔值，指示对象自身属性中是否具有指定的属性
+          /*
+            function _objectWithoutProperties(obj, keys) {
+              var target = {};
+              for (var i in obj) {
+                  if (keys.indexOf(i) >= 0) continue;
+                  if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+                  target[i] = obj[i];
+              }
+              return target;
+          }
+                    
+          */
+          // 拷贝属性 不拷贝 排除 wrappedComponentRef 属性外
           restProps = _objectWithoutProperties(_props, ["wrappedComponentRef"]); // eslint-disable-line
+        // 为对象添加 描述设置属性 获取
 
         var formProps = _defineProperty({}, formPropName, this.getForm());
+
         if (withRef) {
           if (
             process.env.NODE_ENV !== "production" &&
@@ -1021,11 +1070,19 @@ function createBaseForm(option, mixins) {
         } else if (wrappedComponentRef) {
           formProps.ref = wrappedComponentRef;
         }
+        //   拷贝返回一个新的对象
         var props = mapProps.call(this, _extends({}, formProps, restProps));
-        return React.createElement(WrappedComponent, props);
+        console.log("props================", props);
+        // 创建 真实dom
+        return React.createElement(
+          // 高姐组件
+          WrappedComponent,
+          // 属性
+          props
+        );
       },
     });
-
+    // 高阶组件 解决在HOC中Component上面绑定的Static方法会丢失
     return argumentContainer(unsafeLifecyclesPolyfill(Form), WrappedComponent);
   };
 }

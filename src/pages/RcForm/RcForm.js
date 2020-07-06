@@ -56,7 +56,7 @@ class RcForm extends React.Component {
           {/* <Input></Input> */}
           <Form.Item label="Note">
             {getFieldDecorator("note.tree", {
-              rules: [{ required: true, message: "Please input your note!" }],
+              // rules: [{ required: true, message: "Please input your note!" }],
             })(<Input />)}
             {(errors = getFieldError("note.tree")) ? errors.join(",") : null}
           </Form.Item>
