@@ -121,6 +121,7 @@ var mixin = {
         });
 
         if (firstNode) {
+          // 得到滚动box
           var c = options.container || getScrollableContainer(firstNode);
           scrollIntoView(
             firstNode,
