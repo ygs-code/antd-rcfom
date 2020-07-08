@@ -123,6 +123,7 @@ var mixin = {
         if (firstNode) {
           // 得到滚动box
           var c = options.container || getScrollableContainer(firstNode);
+          // 设置到滚动的位置
           scrollIntoView(
             firstNode,
             c,
@@ -140,7 +141,7 @@ var mixin = {
         callback(error, values);
       }
     };
-
+    // 调用校验放方法
     return this.validateFields(names, options, newCb);
   },
 };

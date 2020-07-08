@@ -308,7 +308,7 @@ var FieldsStore = (function () {
       },
     },
     {
-      // 嵌套所有字段
+      // 重新定义所有字段
       key: "getNestedAllFields",
       value: function getNestedAllFields() {
         var _this5 = this;
@@ -383,7 +383,7 @@ var FieldsStore = (function () {
       key: "isValidNestedFieldName",
       // @private
       // BG: `a` and `a.b` cannot be use in the same form
-      // 嵌套是否是可用的字段名
+      //  检验是否是可用的字段名
       value: function isValidNestedFieldName(name) {
         // 获取全部的字段name
         var names = this.getAllFieldsName();
