@@ -47,7 +47,7 @@ export function treeTraverse() {
   // 退出递归循环的条件
   /*
    //检查obj实例是否是Field的构造函数 isFormField
-   // flattenFields  // 获取循环的字段判断是否存在当前的字段中
+   // flattenFields  // 获取循环的字段判断是否存在当前的字段中 有校验作用
   */
   if (isLeafNode(path, tree)) {
     //
@@ -94,7 +94,7 @@ export function treeTraverse() {
   }
 }
 
-// 点平化 字段
+// 点平化 字段   树 把一个数组对象点平化 也有校验 字段是否存在 功能
 export function flattenFields(maybeNestedFields, isLeafNode, errorMessage) {
   console.log("maybeNestedFields=", maybeNestedFields);
   console.log("isLeafNode=", isLeafNode);
@@ -152,6 +152,8 @@ export function getValidateTriggers(validateRules) {
 }
 //从事件中获取值
 export function getValueFromEvent(e) {
+  console.log('e===========',e)
+  console.log('e.target===========',e.target)
   // To support custom element
   if (!e || !e.target) {
     return e;

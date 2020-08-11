@@ -9,7 +9,7 @@ import createFormField, { // 创建字段
 } from "./createFormField";
 import {
   hasRules, //校验规则
-  flattenFields, // 点平化 字段
+  flattenFields, // 点平化 字段   树 把一个数组对象点平化 也有校验 字段是否存在 功能
   getErrorStrs, // 得到错误信息
   startsWith, //判断 prefix 出现位置是索引是不是等于0
 } from "./utils";
@@ -18,9 +18,9 @@ import {
 function partOf(a, b) {
   return b.indexOf(a) === 0 && [".", "["].indexOf(b[a.length]) !== -1;
 }
-// // 点平化 字段
+// 点平化 字段   树 把一个数组对象点平化 也有校验 字段是否存在 功能
 function internalFlattenFields(fields) {
-  // 点平化 字段
+  // 点平化 字段   树 把一个数组对象点平化 也有校验 字段是否存在 功能
   return flattenFields(
     fields,
     function (_, node) {
@@ -49,17 +49,17 @@ var FieldsStore = (function () {
     _classCallCheck(this, FieldsStore);
     // 初始化props
     _initialiseProps.call(this);
-    // 点平字段
+    // 点平化 字段   树 把一个数组对象点平化 也有校验 字段是否存在 功能
     this.fields = internalFlattenFields(fields);
 
-    this.fieldsMeta = {}; // 存储表单字段初始化的值
+    this.fieldsMeta = {}; // 存储表单字段初始化的对象仓库
   }
   // 创建一个reactClass
   _createClass(FieldsStore, [
     {
       key: "updateFields", // 更新字段
       value: function updateFields(fields) {
-        // 点评字段
+        // 点平化 字段   树 把一个数组对象点平化 也有校验 字段是否存在 功能
         this.fields = internalFlattenFields(fields);
       },
     },
@@ -70,7 +70,7 @@ var FieldsStore = (function () {
         console.log("flattenRegisteredFields=", fields);
         // 获取所有字段的名称
         var validFieldsName = this.getAllFieldsName();
-        // 点平字段
+        // 点平化 字段   树 把一个数组对象点平化 也有校验 字段是否存在 功能
         return flattenFields(
           fields,
           function (path) {
@@ -87,13 +87,13 @@ var FieldsStore = (function () {
       key: "setFields",
       value: function setFields(fields) {
         var _this = this;
-        // 获取字段初始化值
+        // 获取字段信息
         var fieldsMeta = this.fieldsMeta;
         // 新字段 和 原来字段合并
         var nowFields = _extends({}, this.fields, fields);
         // 新的值
         var nowValues = {};
-
+        // 获取字段值
         Object.keys(fieldsMeta).forEach(function (f) {
           // 获取字段的值
           nowValues[f] = _this.getValueFromFields(
@@ -101,11 +101,11 @@ var FieldsStore = (function () {
             nowFields // 所有字段
           );
         });
-        // 循环现在的值
+        // 循环现在的值 然后注册到Meta 中 
         Object.keys(nowValues).forEach(function (f) {
           // 获取单个值
           var value = nowValues[f];
-          // 获取单个字段的value值
+          // 获取单个字段的getFieldMeta 对象 这个是字段 信息
           var fieldMeta = _this.getFieldMeta(f);
           // 初始化值设定的一个函数 demo https://codepen.io/afc163/pen/JJVXzG?editors=0010
           if (fieldMeta && fieldMeta.normalize) {
@@ -129,7 +129,7 @@ var FieldsStore = (function () {
       },
     },
     {
-      // 重置值 但是  initialValue 没能重置 可能是一个bug
+      // 重置值  
       key: "resetFields",
       // 重置字段的值
       value: function resetFields(ns) {
@@ -138,6 +138,8 @@ var FieldsStore = (function () {
         var names = ns
           ? this.getValidFieldsFullName(ns)
           : this.getAllFieldsName();
+          console.log('names====',names)
+          // debugger
         // 重置 value 清空
         return names.reduce(function (acc, name) {
           var field = fields[name];
@@ -149,7 +151,7 @@ var FieldsStore = (function () {
       },
     },
     {
-      // 设置记录fields初始化值
+      // 设置 fieldsMeta 字段信息  
       key: "setFieldMeta",
       value: function setFieldMeta(name, meta) {
         this.fieldsMeta[name] = meta;
@@ -176,7 +178,7 @@ var FieldsStore = (function () {
       },
     },
     {
-      // 获取单个字段的getFieldMeta值 也可以理解是初始化值
+      // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
       key: "getFieldMeta",
       value: function getFieldMeta(name) {
         this.fieldsMeta[name] = this.fieldsMeta[name] || {};
@@ -194,7 +196,7 @@ var FieldsStore = (function () {
         if (field && "value" in field) {
           return field.value; //如果有值的返回出去
         }
-        // 获取单个字段的value值
+        // 获取单个字段的getFieldMeta 对象 这个是字段 信息
         var fieldMeta = this.getFieldMeta(name);
         // 如果字段用没有值则取初始化值
         return fieldMeta && fieldMeta.initialValue;
@@ -205,12 +207,12 @@ var FieldsStore = (function () {
       key: "getValidFieldsName",
       value: function getValidFieldsName() {
         var _this3 = this;
-        //记录fields初始化值
+        //记录fieldsMeta 字段信息
         var fieldsMeta = this.fieldsMeta;
 
         return fieldsMeta
           ? Object.keys(fieldsMeta).filter(function (name) {
-              // 获取单个字段的getFieldMeta值
+              // 获取单个字段的getFieldMeta 对象 这个是字段 信息
               return !_this3.getFieldMeta(name).hidden;
             })
           : [];
@@ -220,13 +222,14 @@ var FieldsStore = (function () {
       //获取全部字段名称
       key: "getAllFieldsName",
       value: function getAllFieldsName() {
+        //记录fieldsMeta 字段信息
         var fieldsMeta = this.fieldsMeta;
         return fieldsMeta ? Object.keys(fieldsMeta) : [];
       },
     },
     {
+        // 从所有字段中 过滤出 maybePartialName 参数匹配到的字段
       key: "getValidFieldsFullName",
-      // 从所有字段中 过滤出 maybePartialName 参数匹配到的字段
       value: function getValidFieldsFullName(maybePartialName) {
         // 判断maybePartialName是否是数组 如果不是数组则包装成一个数组
         var maybePartialNames = Array.isArray(maybePartialName)
@@ -294,7 +297,7 @@ var FieldsStore = (function () {
             return {
               name: name,
               dirty: false,
-              // 获取单个字段的value初始化值
+              // 获取单个字段的getFieldMeta 对象 这个是字段 信息
               value: _this4.getFieldMeta(name).initialValue,
             };
           })
@@ -380,10 +383,11 @@ var FieldsStore = (function () {
       },
     },
     {
+      // 检查字段
       key: "isValidNestedFieldName",
       // @private
       // BG: `a` and `a.b` cannot be use in the same form
-      //  检验是否是可用的字段名
+      //  是否是可用的字段名
       value: function isValidNestedFieldName(name) {
         // 获取全部的字段name
         var names = this.getAllFieldsName();
@@ -418,9 +422,10 @@ var _initialiseProps = function _initialiseProps() {
     Object.keys(flattenedInitialValues).forEach(function (name) {
       // 获取 单个字段名
       if (fieldsMeta[name]) {
-        // 如果字段存在            // 获取单个字段的value值
+        //    设置 fieldsMeta 字段信息  
         _this6.setFieldMeta(
           name,
+          // 获取单个字段的getFieldMeta 对象 这个是字段 信息
           _extends({}, _this6.getFieldMeta(name), {
             initialValue: flattenedInitialValues[name],
           })

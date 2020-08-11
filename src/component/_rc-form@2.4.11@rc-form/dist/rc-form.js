@@ -9,6 +9,7 @@
 		root["rc-form"] = factory(root["ReactDOM"], root["React"]);
 })(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_174__, __WEBPACK_EXTERNAL_MODULE_52__) {
 return /******/ (function(modules) { // webpackBootstrap
+  console.log('rc-form==================')
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -77,7 +78,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 /* WEBPACK VAR INJECTION */(function(process) {
 
 Object.defineProperty(exports, "__esModule", {
@@ -307,7 +308,7 @@ function deepMerge(target, source) {
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -612,7 +613,7 @@ exports.f = __webpack_require__(5) ? Object.defineProperty : function defineProp
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 exports.__esModule = true;
@@ -1215,7 +1216,7 @@ module.exports = toKey;
 /* 35 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-"use strict";
+
 /* harmony export (immutable) */ __webpack_exports__["a"] = argumentContainer;
 /* harmony export (immutable) */ __webpack_exports__["i"] = identity;
 /* harmony export (immutable) */ __webpack_exports__["b"] = flattenArray;
@@ -1395,7 +1396,7 @@ function startsWith(str, prefix) {
 /* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-"use strict";
+
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mixin; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createBaseForm__ = __webpack_require__(37);
 
@@ -1435,7 +1436,7 @@ function createForm(options) {
 /* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-"use strict";
+
 /* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_objectWithoutProperties__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_objectWithoutProperties___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_objectWithoutProperties__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty__ = __webpack_require__(38);
@@ -2069,7 +2070,7 @@ function createBaseForm() {
 /* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 exports.__esModule = true;
@@ -2269,7 +2270,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_52__;
 /* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -2305,7 +2306,7 @@ exports['default'] = required;
 /* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 /* WEBPACK VAR INJECTION */(function(process) {/**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -2447,7 +2448,7 @@ module.exports = isIndex;
 /* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 exports.__esModule = true;
@@ -2469,7 +2470,7 @@ module.exports = __webpack_require__(59);
 /* 59 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-"use strict";
+
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_createForm__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_createDOMForm__ = __webpack_require__(173);
@@ -2487,7 +2488,7 @@ if (typeof window !== 'undefined') {
 /* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 exports.__esModule = true;
@@ -2589,7 +2590,7 @@ $export($export.S + $export.F, 'Object', { assign: __webpack_require__(69) });
 /* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 // 19.1.2.1 Object.assign(target, source, ...)
 var DESCRIPTORS = __webpack_require__(5);
@@ -2713,7 +2714,7 @@ exports.f = {}.propertyIsEnumerable;
 /* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 exports.__esModule = true;
@@ -2755,7 +2756,7 @@ module.exports = __webpack_require__(4).Array.from;
 /* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 var $at = __webpack_require__(79)(true);
 
@@ -2802,7 +2803,7 @@ module.exports = function (TO_STRING) {
 /* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 var LIBRARY = __webpack_require__(48);
 var $export = __webpack_require__(9);
@@ -2885,7 +2886,7 @@ module.exports = __webpack_require__(10);
 /* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 var create = __webpack_require__(83);
 var descriptor = __webpack_require__(19);
@@ -2998,7 +2999,7 @@ module.exports = Object.getPrototypeOf || function (O) {
 /* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 var ctx = __webpack_require__(40);
 var $export = __webpack_require__(9);
@@ -3074,7 +3075,7 @@ module.exports = function (it) {
 /* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 var $defineProperty = __webpack_require__(7);
 var createDesc = __webpack_require__(19);
@@ -3160,7 +3161,7 @@ module.exports = function (exec, skipClosing) {
 /* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -3195,7 +3196,7 @@ module.exports = factory(
 /* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 /* WEBPACK VAR INJECTION */(function(process) {/**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -4129,7 +4130,7 @@ module.exports = factory;
 /* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 /*
 object-assign
 (c) Sindre Sorhus
@@ -4226,7 +4227,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 /* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 /* WEBPACK VAR INJECTION */(function(process) {/**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -4250,7 +4251,7 @@ module.exports = emptyObject;
 /* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 /* WEBPACK VAR INJECTION */(function(process) {/**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -4310,7 +4311,7 @@ module.exports = invariant;
 /* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 /* WEBPACK VAR INJECTION */(function(process) {/**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -4379,7 +4380,7 @@ module.exports = warning;
 /* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 /**
@@ -4421,7 +4422,7 @@ module.exports = emptyFunction;
 /* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -4725,7 +4726,7 @@ exports['default'] = Schema;
 /* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -4813,7 +4814,7 @@ exports['default'] = {
 /* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -4864,7 +4865,7 @@ exports['default'] = string;
 /* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -4900,7 +4901,7 @@ exports['default'] = whitespace;
 /* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5010,7 +5011,7 @@ exports['default'] = type;
 /* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5084,7 +5085,7 @@ exports['default'] = range;
 /* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5123,7 +5124,7 @@ exports['default'] = enumerable;
 /* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5172,7 +5173,7 @@ exports['default'] = pattern;
 /* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5218,7 +5219,7 @@ exports['default'] = method;
 /* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5268,7 +5269,7 @@ exports['default'] = number;
 /* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5314,7 +5315,7 @@ exports['default'] = boolean;
 /* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5360,7 +5361,7 @@ exports['default'] = regexp;
 /* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5407,7 +5408,7 @@ exports['default'] = integer;
 /* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5454,7 +5455,7 @@ exports['default'] = floatFn;
 /* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5501,7 +5502,7 @@ exports['default'] = array;
 /* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5547,7 +5548,7 @@ exports['default'] = object;
 /* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5595,7 +5596,7 @@ exports['default'] = enumerable;
 /* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5644,7 +5645,7 @@ exports['default'] = pattern;
 /* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5693,7 +5694,7 @@ exports['default'] = date;
 /* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5721,7 +5722,7 @@ exports['default'] = required;
 /* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -5758,7 +5759,7 @@ exports['default'] = type;
 /* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -6178,7 +6179,7 @@ function memoize(func, resolver) {
     memoized.cache = cache.set(key, result) || cache;
     return result;
   };
-  memoized.cache = new (memoize.Cache || MapCache);
+  memoized.cache = new (memoize.Cache || MapCache)();
   return memoized;
 }
 
@@ -6244,9 +6245,9 @@ var Hash = __webpack_require__(135),
 function mapCacheClear() {
   this.size = 0;
   this.__data__ = {
-    'hash': new Hash,
-    'map': new (Map || ListCache),
-    'string': new Hash
+    'hash': new Hash(),
+    'map': new (Map || ListCache)(),
+    'string': new Hash()
   };
 }
 
@@ -7164,7 +7165,7 @@ module.exports = defineProperty;
 /* 166 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-"use strict";
+
 /* harmony export (immutable) */ __webpack_exports__["a"] = createFieldsStore;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_defineProperty__ = __webpack_require__(38);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_defineProperty__);
@@ -7498,7 +7499,7 @@ function createFieldsStore(fields) {
 /* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 exports.__esModule = true;
@@ -7531,7 +7532,7 @@ exports.default = function () {
 /* 168 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-"use strict";
+
 /* harmony export (immutable) */ __webpack_exports__["b"] = isFormField;
 /* harmony export (immutable) */ __webpack_exports__["a"] = createFormField;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(8);
@@ -7562,7 +7563,7 @@ function createFormField(field) {
 /* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 /**
@@ -7672,7 +7673,7 @@ module.exports = hoistNonReactStatics;
 /* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 /* WEBPACK VAR INJECTION */(function(process) {
 
 if (process.env.NODE_ENV === 'production') {
@@ -7687,7 +7688,7 @@ if (process.env.NODE_ENV === 'production') {
 /* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 /** @license React v16.9.0
  * react-is.production.min.js
  *
@@ -7709,7 +7710,7 @@ exports.isElement=function(a){return"object"===typeof a&&null!==a&&a.$$typeof===
 /* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 /* WEBPACK VAR INJECTION */(function(process) {/** @license React v16.9.0
  * react-is.development.js
  *
@@ -7725,7 +7726,7 @@ exports.isElement=function(a){return"object"===typeof a&&null!==a&&a.$$typeof===
 
 if (process.env.NODE_ENV !== "production") {
   (function() {
-'use strict';
+
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -7949,7 +7950,7 @@ exports.isSuspense = isSuspense;
 /* 173 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-"use strict";
+
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(174);
@@ -8075,7 +8076,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_174__;
 /* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 module.exports = __webpack_require__(176);
@@ -8084,7 +8085,7 @@ module.exports = __webpack_require__(176);
 /* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 var util = __webpack_require__(177);
@@ -8219,7 +8220,7 @@ module.exports = scrollIntoView;
 /* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+
 
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };

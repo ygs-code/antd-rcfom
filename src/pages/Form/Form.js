@@ -15,11 +15,12 @@ class NormalLoginForm extends React.Component {
   };
 
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator,getFieldProps } = this.props.form;
     return (
       <Form onSubmit={this.handleSubmit} className="login-form">
         <Form.Item>
-          {getFieldDecorator('username', {
+         <input ref="ref_normal" {...getFieldProps("normal")} />
+          {/* {getFieldDecorator('username', {
             rules: [{ required: true, message: 'Please input your username!' }],
           })(
             <Input
@@ -27,6 +28,19 @@ class NormalLoginForm extends React.Component {
               placeholder="Username"
             />,
           )}
+
+            {getFieldDecorator('age', {
+            rules: [{ required: true, message: 'Please input your age!' }],
+          })(
+            <Input
+              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="Username"
+            />,
+          )} */}
+          <div name="username">asdfsdaf</div>
+          <div>asdfsdaf</div>
+          <div>asdfsdaf</div>
+          <div>asdfsdaf</div>
         </Form.Item>
         <Form.Item>
           {getFieldDecorator('password', {

@@ -1,5 +1,5 @@
 import _objectWithoutProperties from "babel-runtime/helpers/objectWithoutProperties";
-// 为对象添加 描述设置属性
+// 为对象添加 描述设置属性 或者是为对象添加 属性或者方法
 import _defineProperty from "babel-runtime/helpers/defineProperty";
 import _extends from "babel-runtime/helpers/extends";
 // 数组去重
@@ -71,7 +71,7 @@ function createBaseForm(option, mixins) {
   return function decorate(
     WrappedComponent //组件传入进来
   ) {
-    // 创建一个组件
+    // 创建一个组件     bable 在线编译  https://www.babeljs.cn/repl
     var Form = createReactClass({
       displayName: "Form",
       // 添加拓展参数
@@ -82,7 +82,7 @@ function createBaseForm(option, mixins) {
 
         var fields = mapPropsToFields && mapPropsToFields(this.props); //  存储表单项的值，错误文案等即时数据，重绘表单时props从this.fields取值
         console.log("fields=", fields);
-        debugger;
+
         // 创建字段仓库
         this.fieldsStore = createFieldsStore(fields || {});
 
@@ -98,7 +98,7 @@ function createBaseForm(option, mixins) {
         [
           "getFieldsValue", // 获取字段值的函数
           "getFieldValue", // 获取字段值的函数
-          "setFieldsInitialValue", // 设置字段值的函数
+          "setFieldsInitialValue", //  设置字段初始值
           "getFieldsError", //  获取一组输入控件的 Error ，如不传入参数，则获取全部组件的
           "getFieldError", //	获取某个输入控件的 Error
           "isFieldValidating", //判断一个输入控件是否在校验状态
@@ -132,6 +132,7 @@ function createBaseForm(option, mixins) {
       componentDidMount: function componentDidMount() {
         // 清理无用的字段
         this.cleanUpUselessFields();
+        console.log("this.fieldsStore=", this.fieldsStore);
       },
       // 表单重绘时，通过mapPropsToFields从props中获取数据注入this.fields
       componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
@@ -144,10 +145,15 @@ function createBaseForm(option, mixins) {
         // 清理无用的字段
         this.cleanUpUselessFields();
       },
-      // 收集 字段对象
-      onCollectCommon: function onCollectCommon(name, action, args) {
-        // 获取单个字段的value值
+      // 收集 事件中获取值 和从事件中设置值
+      onCollectCommon: function onCollectCommon(
+        name,  // 字段名称
+        action,  // 事件
+        args // 事件event 参数
+        ) {
+        // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
         var fieldMeta = this.fieldsStore.getFieldMeta(name);
+        // 判断fieldMeta 中有 事件么 如果有有则执行事件
         if (fieldMeta[action]) {
           // 执行方法
           fieldMeta[action].apply(
@@ -156,9 +162,9 @@ function createBaseForm(option, mixins) {
             _toConsumableArray(args)
           );
         } else if (
-          //原始的道具
+          //原始组件的的props 属性
           fieldMeta.originalProps &&
-          //原始的道具
+          //原始组件的的props 属性 事件
           fieldMeta.originalProps[action]
         ) {
           var _fieldMeta$originalPr;
@@ -196,7 +202,7 @@ function createBaseForm(option, mixins) {
           onValuesChange(
             // 浅拷贝
             _extends(
-              // 为对象添加 描述设置属性
+              // 为对象添加 描述设置属性 或者是为对象添加 属性或者方法
               _defineProperty({}, formPropName, this.getForm()),
               this.props
             ),
@@ -217,8 +223,9 @@ function createBaseForm(option, mixins) {
           fieldMeta: fieldMeta,
         };
       },
-      // 收集设置字段
+      // 收集 事件中获取值 和从事件中设置值
       onCollect: function onCollect(name_, action) {
+        console.log("onCollect===========");
         for (
           var _len = arguments.length, // 获取参数长度
             args = Array(_len > 2 ? _len - 2 : 0), // 声明 args 变量
@@ -229,7 +236,7 @@ function createBaseForm(option, mixins) {
           // 如果参数大于2的时候 args 减去前面两个参数
           args[_key - 2] = arguments[_key];
         }
-        // 收集 字段对象
+        // 收集 事件中获取值 和从事件中设置值
         var _onCollectCommon = this.onCollectCommon(name_, action, args),
           name = _onCollectCommon.name, // 字段名称
           field = _onCollectCommon.field, //字段
@@ -244,14 +251,17 @@ function createBaseForm(option, mixins) {
           //校验规则
           dirty: hasRules(validate),
         });
+
         // 设置字段
         this.setFields(
-          // 为对象添加 描述设置属性
+          // 为对象添加 描述设置属性 或者是为对象添加 属性或者方法
           _defineProperty({}, name, newField)
         );
       },
-      // 收集验证
+      // 收集验证 onchange 事件
       onCollectValidate: function onCollectValidate(name_, action) {
+        console.log("arguments=", arguments);
+        console.log("onCollectValidate===========");
         for (
           var _len2 = arguments.length,
             args = Array(_len2 > 2 ? _len2 - 2 : 0),
@@ -262,7 +272,7 @@ function createBaseForm(option, mixins) {
           // 收集大于2个参数组成数组存放在args数组中
           args[_key2 - 2] = arguments[_key2];
         }
-        // 收集 字段对象
+        // 收集设置字段 从事件中获取值 和从事件中设置值
         var _onCollectCommon2 = this.onCollectCommon(name_, action, args),
           // 获取字段
           field = _onCollectCommon2.field,
@@ -293,6 +303,7 @@ function createBaseForm(option, mixins) {
         //如果获取不到缓存那么就设置缓存
         if (!cache[action] || cache[action].oriFn !== fn) {
           cache[action] = {
+            // 事件固定传参
             fn: fn.bind(this, name, action),
             oriFn: fn,
           };
@@ -313,7 +324,7 @@ function createBaseForm(option, mixins) {
         ) {
           // We should put field in record if it is rendered 如果字段被渲染，我们应该把它放在record中
           _this2.renderFields[name] = true;
-          // 获取初始化对象值
+          // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
           var fieldMeta = _this2.fieldsStore.getFieldMeta(name);
           var originalProps = fieldElem.props; // 获取组件属性
           // 如果不是上产环境 其实我们可以忽略警告日志
@@ -346,7 +357,7 @@ function createBaseForm(option, mixins) {
           fieldMeta.originalProps = originalProps;
           console.log("fieldElem==", fieldElem);
           console.log("fieldElem.ref==", fieldElem.ref);
-          // debugger;
+      
           fieldMeta.ref = fieldElem.ref; // 获取组件的ref
           console.log(" React.cloneElement=");
           // 克隆一个 组件
@@ -397,7 +408,7 @@ function createBaseForm(option, mixins) {
           // 嵌套是否是可用的字段名
           warning(
             this.fieldsStore.isValidNestedFieldName(name), // 布尔值 如果为false 就打印日志
-            //一个字段名不能是另一个字段名的一部分。“一个”和“a.b。”检查字段:
+            //一个字段名不能是另一个字段名的一部分。“一个” a 和“a.b。”检查字段:
             "One field name cannot be part of another, e.g. `a` and `a.b`. Check field: " +
               name
           );
@@ -428,11 +439,14 @@ function createBaseForm(option, mixins) {
               ? trigger
               : _fieldOption$validate,
           validate = fieldOption.validate; //验证
-        // 获取 字段的 存储对象 也可以理解为存储初始化对象
+        console.log("name=", name);
+        // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
         var fieldMeta = this.fieldsStore.getFieldMeta(name);
+        console.log("fieldMeta=", fieldMeta);
+       
         // 判断是否有初始化值
         if ("initialValue" in fieldOption) {
-          // 如果没有重新赋值
+          // 如果有重新赋值
           fieldMeta.initialValue = fieldOption.initialValue;
         }
         // 获取字段的value 值
@@ -464,10 +478,13 @@ function createBaseForm(option, mixins) {
         console.log("validateTriggers=", validateTriggers);
         validateTriggers.forEach(function (action) {
           if (inputProps[action]) return;
+          console.log("action===", action);
+
           //获取缓存绑定 change 事件
           inputProps[action] = _this3.getCacheBind(
             name,
             action,
+            // 收集 事件中获取值 和从事件中设置值
             _this3.onCollectValidate
           );
         });
@@ -478,6 +495,7 @@ function createBaseForm(option, mixins) {
           inputProps[trigger] = this.getCacheBind(
             name,
             trigger,
+            // 收集 事件中获取值 和从事件中设置值
             this.onCollect
           );
         }
@@ -488,7 +506,7 @@ function createBaseForm(option, mixins) {
         // 重新设置fieldMeta
         this.fieldsStore.setFieldMeta(name, meta);
         console.log("fieldMetaProp=", fieldMetaProp);
-        // debugger;
+        
         if (fieldMetaProp) {
           //该选项一般不会传递
           inputProps[fieldMetaProp] = meta;
@@ -496,7 +514,7 @@ function createBaseForm(option, mixins) {
 
         if (fieldDataProp) {
           // 字段的props属性
-          //忽略改选项
+          //忽略该选项
           inputProps[fieldDataProp] = this.fieldsStore.getField(name);
         }
 
@@ -504,6 +522,9 @@ function createBaseForm(option, mixins) {
         this.renderFields[name] = true;
         // 返回组件属性
         console.log("inputProps=", inputProps);
+        console.log("inputProps.onChange=", inputProps.onChange);
+        console.log("inputProps.ref=", inputProps.ref);
+
         return inputProps;
       },
       // 获取字段实例
@@ -547,7 +568,7 @@ function createBaseForm(option, mixins) {
           // 更新字段
           onFieldsChange(
             _extends(
-              // 为对象添加 描述设置属性
+              // 为对象添加 描述设置属性 或者是为对象添加 属性或者方法
               _defineProperty({}, formPropName, this.getForm()),
               this.props
             ),
@@ -565,7 +586,7 @@ function createBaseForm(option, mixins) {
         // 回调函数
         callback
       ) {
-        // 获取 原来的 字段存储数据
+        // 获取 原来的 字段 信息
         var fieldsMeta = this.fieldsStore.fieldsMeta;
         console.log("changedValues==========", changedValues);
         //点平注册字段 判断传进来的字段是否在已经创建的字段中
@@ -600,7 +621,7 @@ function createBaseForm(option, mixins) {
           // 更新值
           onValuesChange(
             _extends(
-              // 为对象添加 描述设置属性
+              // 为对象添加 描述设置属性 或者是为对象添加 属性或者方法
               _defineProperty({}, formPropName, this.getForm()),
               this.props
             ),
@@ -613,7 +634,7 @@ function createBaseForm(option, mixins) {
       saveRef: function saveRef(name, _, component) {
         // 如果组件不存在
         if (!component) {
-          // 获取 字段的 _fieldMeta 对象
+          // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
           var _fieldMeta = this.fieldsStore.getFieldMeta(name);
           // 保存
           if (!_fieldMeta.preserve) {
@@ -633,7 +654,7 @@ function createBaseForm(option, mixins) {
         this.domFields[name] = true;
         // 删除  记录销毁缓存 中的 Field 数据，并且重新设置 Field
         this.recoverClearedField(name);
-        // 获取FieldMeta 对象
+        // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
         var fieldMeta = this.fieldsStore.getFieldMeta(name);
         console.log("fieldMeta=", fieldMeta);
 
@@ -656,7 +677,6 @@ function createBaseForm(option, mixins) {
         // 记录组件的实例
         this.instances[name] = component;
         console.log("component=", component);
-        debugger;
       },
       // 清理无用的字段
       cleanUpUselessFields: function cleanUpUselessFields() {
@@ -665,7 +685,7 @@ function createBaseForm(option, mixins) {
         var fieldList = this.fieldsStore.getAllFieldsName();
         console.log("fieldList=", fieldList);
         var removedList = fieldList.filter(function (field) {
-          // 获取字段Meta对象
+          // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
           var fieldMeta = _this5.fieldsStore.getFieldMeta(field);
           // 判断如果不存在renderFields 或者 domFields 或者 fieldMeta.preserve 为假的时候
           return (
@@ -690,10 +710,13 @@ function createBaseForm(option, mixins) {
       // 重置字段
       resetFields: function resetFields(ns) {
         var _this6 = this;
-        // 重置值 但是  initialValue 没能重置 可能是一个bug  // 重置字段的值
+        //   // 重置字段的值
         var newFields = this.fieldsStore.resetFields(ns);
+       
 
         if (Object.keys(newFields).length > 0) {
+          console.log('newFields=',newFields)
+         
           // 设置字段 重新设置值
           this.setFields(newFields);
         }
@@ -713,10 +736,10 @@ function createBaseForm(option, mixins) {
         if (this.clearedFieldMetaCache[name]) {
           //   重新设置字段 新的值
           this.fieldsStore.setFields(
-            // 为对象添加 描述设置属性
+            // 为对象添加 描述设置属性 或者是为对象添加 属性或者方法
             _defineProperty({}, name, this.clearedFieldMetaCache[name].field)
           );
-          //重新设置 Meta 对象
+          //重新设置 Meta 对象信息
           this.fieldsStore.setFieldMeta(
             name,
             this.clearedFieldMetaCache[name].meta
@@ -728,7 +751,7 @@ function createBaseForm(option, mixins) {
       //字段内部验证字段
       validateFieldsInternal: function validateFieldsInternal(
         fields, //  需要校验的字段
-        _ref,
+        _ref,  // 拓展参数选项
         callback // 回调函数
       ) {
         var _this7 = this;
@@ -754,7 +777,7 @@ function createBaseForm(option, mixins) {
             }
             return;
           }
-          // 获取字段的Meta 对象
+          // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
           var fieldMeta = _this7.fieldsStore.getFieldMeta(name);
           //浅拷贝字段
           var newField = _extends({}, field);
@@ -787,7 +810,7 @@ function createBaseForm(option, mixins) {
           );
           return;
         }
-        // 异步验证
+        // 异步验证 第三方插件
         var validator = new AsyncValidator(allRules);
         //整个表单校验信息
         if (validateMessages) {
@@ -911,6 +934,10 @@ function createBaseForm(option, mixins) {
       //验证字段,返回promise
       validateFields: function validateFields(ns, opt, cb) {
         var _this8 = this;
+        console.log("this=", this);
+        console.log("this.fieldsStore=", this.fieldsStore);
+ 
+    
 
         var pending = new Promise(function (resolve, reject) {
           // 得到参数，格式化整理转义参数
@@ -947,6 +974,7 @@ function createBaseForm(option, mixins) {
           // 获取含有检验规则的字段
           var fields = fieldNames
             .filter(function (name) {
+              // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
               var fieldMeta = _this8.fieldsStore.getFieldMeta(name);
               //校验规则
               return hasRules(fieldMeta.validate);
@@ -968,11 +996,12 @@ function createBaseForm(option, mixins) {
           }
           if (!("firstFields" in options)) {
             options.firstFields = fieldNames.filter(function (name) {
+              // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
               var fieldMeta = _this8.fieldsStore.getFieldMeta(name);
               return !!fieldMeta.validateFirst; //当某一规则校验不通过时，是否停止剩下的规则的校验
             });
           }
-          //内部验证字段
+          //内部验证字段 
           _this8.validateFieldsInternal(
             fields,
             {
@@ -1051,8 +1080,8 @@ function createBaseForm(option, mixins) {
           */
           // 拷贝属性 不拷贝 排除 wrappedComponentRef 属性外
           restProps = _objectWithoutProperties(_props, ["wrappedComponentRef"]); // eslint-disable-line
-        // 为对象添加 描述设置属性 获取
 
+        // 为对象添加 描述设置属性 或者是为对象添加 属性或者方法
         var formProps = _defineProperty({}, formPropName, this.getForm());
 
         if (withRef) {
