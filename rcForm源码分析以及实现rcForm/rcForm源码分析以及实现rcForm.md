@@ -137,15 +137,76 @@ createBaseForm 组件的 getInitialState
 
 ```
 
-* getFieldProps 
+#### getFieldProps 
 
-  * 该方法主要是返回 onChange 方法和 value 让组件变成受控组件
+* 该方法主要是返回 onChange 方法和 value 让组件变成受控组件，促进双向绑定的修饰器。
+* 为Meta 类添加一个 MetaFiel 对象
+* ![inputProps](./inputProps.png)
 
-  ```
-  
-  ```
+```
+ // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
+var fieldMeta = this.fieldsStore.getFieldMeta(name);
+     //获取字段选项参数
+        var fieldOption = _extends(
+          {
+            name: name, // 字段名称
+            trigger: DEFAULT_TRIGGER, //onChange 收集子节点的值的时机
+            valuePropName: "value", // 字段value
+            validate: [], // 验证 空数组
+          },
+          usersFieldOption //  字段选项参数
+        );
+         /// ... 省略代码
+        
+         return inputProps;
 
-  
+```
+
+
+
+#### getFieldDecorator  
+
+*  // 用于和表单进行双向绑定，详见下方描述 装饰组件，促进双向绑定的修饰器
+* 实际上他主要也是调用getFieldProps 方法
+* 通过闭包，hoc高阶组建，利用React.cloneElement 隐形 把props 注入 到组建中
+* 以下片段代码
+
+```
+    // 用于和表单进行双向绑定，详见下方描述 装饰组件，促进双向绑定的修饰器
+      getFieldDecorator: function getFieldDecorator(
+        name, // 字段名称
+        fieldOption // 字段设置参数
+      ) {
+        var _this2 = this;
+        // 创建待验证的表单 设置字段元数据，返回 计算被修饰组件的属性
+        var props = this.getFieldProps(name, fieldOption);
+        return function (
+          fieldElem // 组件 也可以理解为react 的 vnode 虚拟dom
+        ) {
+        // .....
+        
+           return React.cloneElement(
+            fieldElem, //原来的vnode
+            // props 属性
+            _extends(
+              {},
+              props, // 用户传进来的 props 属性
+              // 获取value 属性值
+              _this2.fieldsStore.getFieldValuePropValue(fieldMeta)
+            )
+          );
+        
+        .....
+        
+```
+
+
+
+
+
+
+
+
 
 
 

@@ -11,7 +11,9 @@ import React from "react";
 //如果你不使用 ES6 ，你可以使用 create-react-class 方法代替： 用es5 创建一个 react 组件
 import createReactClass from "create-react-class";
 import unsafeLifecyclesPolyfill from "rc-util/es/unsafeLifecyclesPolyfill";
+
 import AsyncValidator from "async-validator";
+
 import warning from "warning";
 import get from "lodash/get";
 import set from "lodash/set";
@@ -42,6 +44,7 @@ import {
   //变成一个真正的数组
   flattenArray,
 } from "./utils";
+import { render } from "less";
 
 var DEFAULT_TRIGGER = "onChange";
 //创建表单
@@ -459,7 +462,7 @@ function createBaseForm(option, mixins) {
             ref: this.getCacheBind(name, name + "__ref", this.saveRef),
           }
         );
-        // 获取表单的create name 如果不存在则用当前字段name代替
+        // 获取表单的create name 如果不存在则用当前字段name代替,如果有 则拼接 name
         if (fieldNameProp) {
           inputProps[fieldNameProp] = formName ? formName + "_" + name : name;
         }
@@ -785,7 +788,7 @@ function createBaseForm(option, mixins) {
           newField.errors = undefined;
           // 设置已经验证过
           newField.validating = true;
-
+             // 
           newField.dirty = true;
           //获取得到验证规则
           allRules[name] = _this7.getRules(fieldMeta, action);
@@ -810,18 +813,21 @@ function createBaseForm(option, mixins) {
           );
           return;
         }
-        // 异步验证 第三方插件
+        
+        // 表单异步验证 第三方插件
         var validator = new AsyncValidator(allRules);
-        //整个表单校验信息
+        //整个表单校验信息 一般不会传递这个
         if (validateMessages) {
           validator.messages(validateMessages);
         }
+        console.log('allRules=',allRules)
+        console.log('allValues=',allValues)
         validator.validate(
           allValues, // 全部值
           options, // 选项
           // 错误信息回调函数
           function (errors) {
-            // 获取错误信息
+            // 获取错误信息集合
             var errorsGroup = _extends({}, alreadyErrors);
             // 如果错误信息存在
             if (errors && errors.length) {
@@ -976,7 +982,7 @@ function createBaseForm(option, mixins) {
             .filter(function (name) {
               // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
               var fieldMeta = _this8.fieldsStore.getFieldMeta(name);
-              //校验规则
+              //含有校验规则的字段
               return hasRules(fieldMeta.validate);
             })
             .map(function (name) {
@@ -994,6 +1000,7 @@ function createBaseForm(option, mixins) {
             callback(null, _this8.fieldsStore.getFieldsValue(fieldNames));
             return;
           }
+          // 标志当某一规则校验不通过时，是否停止剩下的规则的校验
           if (!("firstFields" in options)) {
             options.firstFields = fieldNames.filter(function (name) {
               // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用

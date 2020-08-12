@@ -248,24 +248,24 @@ class RcForm extends React.Component {
             {getFieldDecorator("type", {
               rules: [
                 { required: true, message: "Please input your note!" },
-                {
-                  asyncValidator: (rule, value, callback) => {
-                    const { getFieldValue } = this.props.form;
-                    // if (value && value !== getFieldValue("newPassword")) {
-                    // callback("地址错误");
-                    return new Promise((resolve, reject) => {
-                      // if (value < 18) {
-                      reject("类型错误"); // reject with error message
-                      // } else {
-                      //   resolve();
-                      // }
-                    });
-                    // }
+                // {
+                //   asyncValidator: (rule, value, callback) => {
+                //     const { getFieldValue } = this.props.form;
+                //     // if (value && value !== getFieldValue("newPassword")) {
+                //     // callback("地址错误");
+                //     return new Promise((resolve, reject) => {
+                //       // if (value < 18) {
+                //       reject("类型错误"); // reject with error message
+                //       // } else {
+                //       //   resolve();
+                //       // }
+                //     });
+                //     // }
 
-                    // Note: 必须总是返回一个 callback，否则 validateFieldsAndScroll 无法响应
-                    // callback();
-                  },
-                },
+                //     // Note: 必须总是返回一个 callback，否则 validateFieldsAndScroll 无法响应
+                //     // callback();
+                //   },
+                // },
               ],
             })(<Input />)}
             {(errors = getFieldError("type")) ? errors.join(",") : null}
@@ -274,24 +274,24 @@ class RcForm extends React.Component {
             {getFieldDecorator("info", {
               rules: [
                 { required: true, message: "Please input your note!" },
-                {
-                  asyncValidator: (rule, value, callback) => {
-                    const { getFieldValue } = this.props.form;
-                    // if (value && value !== getFieldValue("newPassword")) {
-                    // callback("地址错误");
+                // {
+                //   asyncValidator: (rule, value, callback) => {
+                //     const { getFieldValue } = this.props.form;
+                //     // if (value && value !== getFieldValue("newPassword")) {
+                //     // callback("地址错误");
 
-                    // if (value < 18) {
-                    callback("信息错误"); // reject with error message
-                    // } else {
-                    //   resolve();
-                    // }
+                //     // if (value < 18) {
+                //     callback("信息错误"); // reject with error message
+                //     // } else {
+                //     //   resolve();
+                //     // }
 
-                    // }
+                //     // }
 
-                    // Note: 必须总是返回一个 callback，否则 validateFieldsAndScroll 无法响应
-                    // callback();
-                  },
-                },
+                //     // Note: 必须总是返回一个 callback，否则 validateFieldsAndScroll 无法响应
+                //     // callback();
+                //   },
+                // },
               ],
             })(<Input />)}
             {(errors = getFieldError("info")) ? errors.join(",") : null}
@@ -300,24 +300,24 @@ class RcForm extends React.Component {
             {getFieldDecorator("sex", {
               rules: [
                 { required: true, message: "Please input your note!" },
-                {
-                  asyncValidator: (rule, value, callback) => {
-                    const { getFieldValue } = this.props.form;
-                    // if (value && value !== getFieldValue("newPassword")) {
-                    // callback("地址错误");
+                // {
+                //   asyncValidator: (rule, value, callback) => {
+                //     const { getFieldValue } = this.props.form;
+                //     // if (value && value !== getFieldValue("newPassword")) {
+                //     // callback("地址错误");
 
-                    // if (value < 18) {
-                    callback("信息错误"); // reject with error message
-                    // } else {
-                    //   resolve();
-                    // }
+                //     // if (value < 18) {
+                //     callback("信息错误"); // reject with error message
+                //     // } else {
+                //     //   resolve();
+                //     // }
 
-                    // }
+                //     // }
 
-                    // Note: 必须总是返回一个 callback，否则 validateFieldsAndScroll 无法响应
-                    // callback();
-                  },
-                },
+                //     // Note: 必须总是返回一个 callback，否则 validateFieldsAndScroll 无法响应
+                //     // callback();
+                //   },
+                // },
               ],
             })(<input type="checkbox" id="check1" />)}
             {(errors = getFieldError("sex")) ? errors.join(",") : null}
