@@ -322,7 +322,7 @@ class RcForm extends React.Component {
             })(<input type="checkbox" id="check1" />)}
             {(errors = getFieldError("sex")) ? errors.join(",") : null}
           </Form.Item>
-          =<button onClick={this.submit}>submit</button>
+           <button onClick={this.submit}>submit</button>
           <Form.Item wrapperCol={{ span: 12, offset: 5 }}>
             <Button type="primary" htmlType="submit">
               Submit

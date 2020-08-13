@@ -184,6 +184,15 @@ var fieldMeta = this.fieldsStore.getFieldMeta(name);
           fieldElem // 组件 也可以理解为react 的 vnode 虚拟dom
         ) {
         // .....
+        var data =
+        
+         'data[1].list'=123
+         
+         
+         
+         eval(data)
+       
+        
         
            return React.cloneElement(
             fieldElem, //原来的vnode
