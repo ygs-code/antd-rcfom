@@ -1,7 +1,10 @@
 import _objectWithoutProperties from "babel-runtime/helpers/objectWithoutProperties";
 // 为对象添加 描述设置属性 或者是为对象添加 属性或者方法
 import _defineProperty from "babel-runtime/helpers/defineProperty";
+<<<<<<< HEAD
 // 继承合并
+=======
+>>>>>>> 1f4dc9eeb5e16f6f58c6e47c4dbdeee419f46796
 import _extends from "babel-runtime/helpers/extends";
 // 数组去重
 import _toConsumableArray from "babel-runtime/helpers/toConsumableArray";
@@ -12,9 +15,15 @@ import React from "react";
 //如果你不使用 ES6 ，你可以使用 create-react-class 方法代替： 用es5 创建一个 react 组件
 import createReactClass from "create-react-class";
 import unsafeLifecyclesPolyfill from "rc-util/es/unsafeLifecyclesPolyfill";
+<<<<<<< HEAD
 //表单验证
 import AsyncValidator from "async-validator";
 // 日志警告插件
+=======
+
+import AsyncValidator from "async-validator";
+
+>>>>>>> 1f4dc9eeb5e16f6f58c6e47c4dbdeee419f46796
 import warning from "warning";
 import get from "lodash/get";
 import set from "lodash/set";
@@ -45,7 +54,11 @@ import {
   //变成一个真正的数组
   flattenArray,
 } from "./utils";
+<<<<<<< HEAD
 // import { render } from "less";
+=======
+import { render } from "less";
+>>>>>>> 1f4dc9eeb5e16f6f58c6e47c4dbdeee419f46796
 
 var DEFAULT_TRIGGER = "onChange";
 //创建表单
@@ -87,7 +100,11 @@ function createBaseForm(option, mixins) {
         var fields = mapPropsToFields && mapPropsToFields(this.props); //  存储表单项的值，错误文案等即时数据，重绘表单时props从this.fields取值
         console.log("fields=", fields);
 
+<<<<<<< HEAD
         // 创建字段仓库. 
+=======
+        // 创建字段仓库
+>>>>>>> 1f4dc9eeb5e16f6f58c6e47c4dbdeee419f46796
         this.fieldsStore = createFieldsStore(fields || {});
 
         this.instances = {}; // 字段实例存储
@@ -1122,7 +1139,10 @@ function createBaseForm(option, mixins) {
     // 高阶组件 解决在HOC中Component上面绑定的Static方法会丢失
     return argumentContainer(unsafeLifecyclesPolyfill(Form), WrappedComponent);
   };
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1f4dc9eeb5e16f6f58c6e47c4dbdeee419f46796
 }
 
 export default createBaseForm;

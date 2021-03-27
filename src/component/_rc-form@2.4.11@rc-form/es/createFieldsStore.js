@@ -335,7 +335,11 @@ var FieldsStore = (function () {
       },
     },
     {
+<<<<<<< HEAD
       //设置fields 对象数据 重新定义设置 fields 每个field对象的值，可以根据getter函数值，  可以返回自定义的值
+=======
+      // 重新定义设置 fields 每个field对象的值，可以根据getter函数值，  可以返回自定义的值
+>>>>>>> 1f4dc9eeb5e16f6f58c6e47c4dbdeee419f46796
       key: "getNestedFields",
       value: function getNestedFields(
         names, //字段名称
