@@ -50,6 +50,9 @@ var FieldsStore = (function () {
     // 初始化props
     _initialiseProps.call(this);
     // 点平化 字段   树 把一个数组对象点平化 也有校验 字段是否存在 功能
+    console.log('fields==', fields)
+    // this.fields 对象属性，用来存储每个fields字段属性和事件还有错误信息。
+    // internalFlattenFields  点平化 字段   树 把一个数组对象点平化 也有校验 字段是否存在 功能
     this.fields = internalFlattenFields(fields);
 
     this.fieldsMeta = {}; // 存储表单字段初始化的对象仓库
@@ -124,6 +127,8 @@ var FieldsStore = (function () {
             }
           }
         });
+        console.log('this.fields=', this.fields)
+         debugger
         // 设置 字段
         this.fields = nowFields;
       },
@@ -138,8 +143,8 @@ var FieldsStore = (function () {
         var names = ns
           ? this.getValidFieldsFullName(ns)
           : this.getAllFieldsName();
-          console.log('names====',names)
-          // debugger
+        console.log('names====', names)
+        // debugger
         // 重置 value 清空
         return names.reduce(function (acc, name) {
           var field = fields[name];
@@ -171,7 +176,7 @@ var FieldsStore = (function () {
           if (field && fieldMeta && hasRules(fieldMeta.validate)) {
             // 如果 有校验 标志dirty 为真 表示脏的 需要校验
             _this2.fields[name] = _extends({}, field, {
-              dirty: true,
+              dirty: true,//需要校验
             });
           }
         });
@@ -212,9 +217,9 @@ var FieldsStore = (function () {
 
         return fieldsMeta
           ? Object.keys(fieldsMeta).filter(function (name) {
-              // 获取单个字段的getFieldMeta 对象 这个是字段 信息
-              return !_this3.getFieldMeta(name).hidden;
-            })
+            // 获取单个字段的getFieldMeta 对象 这个是字段 信息
+            return !_this3.getFieldMeta(name).hidden;
+          })
           : [];
       },
     },
@@ -228,7 +233,7 @@ var FieldsStore = (function () {
       },
     },
     {
-        // 从所有字段中 过滤出 maybePartialName 参数匹配到的字段
+      // 从所有字段中 过滤出 maybePartialName 参数匹配到的字段
       key: "getValidFieldsFullName",
       value: function getValidFieldsFullName(maybePartialName) {
         // 判断maybePartialName是否是数组 如果不是数组则包装成一个数组
@@ -273,9 +278,13 @@ var FieldsStore = (function () {
       },
     },
     {
-      // 获取单个字段对象
+      // 获取单个字段对象,如果没有值.则设置新添加field属性值{name:xxxx}
       key: "getField",
       value: function getField(name) {
+        // console.log('value=', _extends({}, this.fields[name], {
+        //   name: name,
+        // }))
+        // debugger
         return _extends({}, this.fields[name], {
           name: name,
         });
@@ -321,6 +330,7 @@ var FieldsStore = (function () {
             // 创建字段
             return set(acc, name, createFormField(_this5.fields[name]));
           },
+
           // 获取未收集的字段  // 为字段重新转义成对象
           this.getNotCollectedFields() // 初始值
         );
@@ -418,6 +428,8 @@ var _initialiseProps = function _initialiseProps() {
     //点平注册字段
     var flattenedInitialValues = _this6.flattenRegisteredFields(initialValues);
     var fieldsMeta = _this6.fieldsMeta;
+    console.log('fieldsMeta=', fieldsMeta)
+    debugger
     // 循环所有字段
     Object.keys(flattenedInitialValues).forEach(function (name) {
       // 获取 单个字段名
@@ -437,6 +449,8 @@ var _initialiseProps = function _initialiseProps() {
   this.getAllValues = function () {
     var fieldsMeta = _this6.fieldsMeta,
       fields = _this6.fields;
+      console.log('fieldsMeta=',fieldsMeta)
+      debugger
 
     return Object.keys(fieldsMeta).reduce(function (acc, name) {
       // 获取字段的值

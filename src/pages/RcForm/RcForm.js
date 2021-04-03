@@ -145,7 +145,7 @@ class RcForm extends React.Component {
   componentDidMount() {
     this.props.form.setFieldsValue({
       age: "29",
-      name: "姚观寿",
+      name: "张 三",
     });
   }
   render() {
@@ -181,6 +181,7 @@ class RcForm extends React.Component {
           <Item label="age">
             <div>
             {getFieldDecorator("age", {
+              initialValue:18,
               rules: [
                 { required: true, message: "Please input your note!" },
                 {

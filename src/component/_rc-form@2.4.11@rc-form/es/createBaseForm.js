@@ -47,6 +47,18 @@ import {
 } from "./utils";
 // import { render } from "less";
 
+
+// fieldsMeta 对象信息 = {
+//   initialValue: 18, // 字段初始化值
+//   name: "age", // fields字段名称
+//   trigger: "onChange",  // onChange事件
+//   valuePropName: "value",  // 值的字段名称value
+//   validate: [{…}],  //onCange事件与校验规则
+//   rules: (2) [{…}, {…}], //校验规则
+//   originalProps: {type: "text"}, // 表单类型
+//   ref: null
+//     }
+
 var DEFAULT_TRIGGER = "onChange";
 //创建表单
 function createBaseForm(option, mixins) {
@@ -323,6 +335,8 @@ function createBaseForm(option, mixins) {
         var _this2 = this;
         // 创建待验证的表单 设置字段元数据，返回 计算被修饰组件的属性
         var props = this.getFieldProps(name, fieldOption);
+        console.log('props=',props)
+        // debugger
         return function (
           fieldElem // 组件 也可以理解为react 的 vnode 虚拟dom
         ) {
@@ -330,6 +344,8 @@ function createBaseForm(option, mixins) {
           _this2.renderFields[name] = true;
           // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
           var fieldMeta = _this2.fieldsStore.getFieldMeta(name);
+          console.log('fieldMeta=',fieldMeta)
+          debugger
           var originalProps = fieldElem.props; // 获取组件属性
           // 如果不是上产环境 其实我们可以忽略警告日志
           if (process.env.NODE_ENV !== "production") {
@@ -577,6 +593,7 @@ function createBaseForm(option, mixins) {
               this.props
             ),
             changedFields,
+            //创建field
             this.fieldsStore.getNestedAllFields()
           );
         }
