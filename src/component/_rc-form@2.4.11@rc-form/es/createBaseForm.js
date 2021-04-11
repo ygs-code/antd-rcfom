@@ -161,7 +161,8 @@ function createBaseForm(option, mixins) {
         // 清理无用的字段
         this.cleanUpUselessFields();
       },
-      // 收集 事件中获取值 和从事件中设置值
+ 
+      // 收集 事件中获取值 和调用onChange事件，返回name，field，fieldMeta 对象
       onCollectCommon: function onCollectCommon(
         name,  // 字段名称
         action,  // 事件
@@ -311,7 +312,7 @@ function createBaseForm(option, mixins) {
           },
         });
       },
-      // 组件事件绑定等收集
+      // 组件事件绑定等 这里一般指的是收集onChange事件，然后返回事件对象
       getCacheBind: function getCacheBind(name, action, fn) {
         // 判断有没有绑定缓存，如果没有则先给一个空的对象
         if (!this.cachedBind[name]) {
@@ -778,7 +779,7 @@ function createBaseForm(option, mixins) {
           delete this.clearedFieldMetaCache[name];
         }
       },
-      //字段内部验证字段
+      //验证字段函数
       validateFieldsInternal: function validateFieldsInternal(
         fields, //  需要校验的字段
         _ref,  // 拓展参数选项
