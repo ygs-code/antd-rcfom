@@ -113,7 +113,15 @@ export function flattenFields(maybeNestedFields, isLeafNode, errorMessage) {
   return fields;
 }
 //  获取验证规则
-export function normalizeValidateRules(validate, rules, validateTrigger) {
+/*
+ 获取收集字段验证规则，并添加到队列中
+*/
+export function normalizeValidateRules(
+   validate,  // 收集验证规则字段存储
+   rules,  // 字段验证规则
+   validateTrigger // 触发字段验证规则事件数组
+   ) {
+
   var validateRules = validate.map(function (item) {
     var newItem = _extends({}, item, {
       trigger: item.trigger || [],
@@ -124,6 +132,7 @@ export function normalizeValidateRules(validate, rules, validateTrigger) {
     return newItem;
   });
   console.log("validateRules=", validateRules);
+  // 如果该字段有验证规则泽添加到validateRules队列中
   if (rules) {
     validateRules.push({
       trigger: validateTrigger ? [].concat(validateTrigger) : [],

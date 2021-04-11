@@ -6,7 +6,7 @@
 
 #### 这个js主要用于创造基本的 form 组件
 
-他的实现主要利用了react 的 hoc 高级组件方式实现，原理其实就是返回一个匿名函数然后在函数中传递一个子组件进来，然后利用 hoc 高阶组件  把props的form 注入进来给children组件，实现例子,这里用到以前的一些知识点 比如闭包，函数式编程，函数式柯里化。所以下面我们来简单的实现一个props.form 注入 code
+他的实现主要利用了react 的 hoc 高级组件方式实现，原理其实就是返回一个匿名函数然后在函数中传递一个子组件进来，然后利用 hoc 高阶组件  把props的form 注入进来给children组件，实现例子,这里用到以前的一些知识点 比如闭包，函数式编程，函数式柯里化。所以下面我们来简单的实现一个props.form 注入 子组件中
 
 ```
  // 因为第一层需要传递参数
@@ -137,38 +137,13 @@ createBaseForm 组件的 getInitialState
 
 ```
 
-#### getFieldProps 
-
-* 该方法主要是返回 onChange 方法和 value 让组件变成受控组件，促进双向绑定的修饰器。
-* 为Meta 类添加一个 MetaFiel 对象
-* ![inputProps](./inputProps.png)
-
-```
- // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
-var fieldMeta = this.fieldsStore.getFieldMeta(name);
-     //获取字段选项参数
-        var fieldOption = _extends(
-          {
-            name: name, // 字段名称
-            trigger: DEFAULT_TRIGGER, //onChange 收集子节点的值的时机
-            valuePropName: "value", // 字段value
-            validate: [], // 验证 空数组
-          },
-          usersFieldOption //  字段选项参数
-        );
-         /// ... 省略代码
-        
-         return inputProps;
-
-```
-
 
 
 #### getFieldDecorator  
 
 *  // 用于和表单进行双向绑定，详见下方描述 装饰组件，促进双向绑定的修饰器
-* 实际上他主要也是调用getFieldProps 方法
-* 通过闭包，hoc高阶组建，利用React.cloneElement 隐形 把props 注入 到组建中
+* 实际上他主要也是调用getFieldProps 方法， 
+* 通过闭包，hoc高阶组建，利用React.cloneElement 隐形 把 props 的value和onChange注入 到组建中
 * 以下片段代码
 
 ```
@@ -200,6 +175,94 @@ var fieldMeta = this.fieldsStore.getFieldMeta(name);
 ```
 
 
+
+#### getFieldProps 
+
+- 该方法主要是返回 onChange 方法和 value 让组件变成受控组件，促进双向绑定的修饰器。
+- 调用trigger (onCollectValidate)和validateTriggers方法(onCollect)
+- 为Meta 类添加一个 MetaFiel 对象
+- ![inputProps](K:/antd-rcfom/rcForm%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E4%BB%A5%E5%8F%8A%E5%AE%9E%E7%8E%B0rcForm/inputProps.png)
+
+```
+ // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
+ // 
+var fieldMeta = this.fieldsStore.getFieldMeta(name);
+     //获取字段选项参数
+        var fieldOption = _extends(
+          {
+            name: name, // 字段名称
+            trigger: DEFAULT_TRIGGER, //onChange 收集子节点的值的时机
+            valuePropName: "value", // 字段value
+            validate: [], // 验证 空数组
+          },
+          usersFieldOption //  字段选项参数
+        );
+         /// ... 省略代码
+        
+         return inputProps;
+
+```
+
+
+
+#### normalizeValidateRules 获取字段验证规则
+
+```
+/*
+ 获取收集字段验证规则，并添加到队列中
+*/
+function normalizeValidateRules(
+   validate,  // 收集验证规则字段存储
+   rules,  // 字段验证规则
+   validateTrigger // 触发字段验证规则事件数组
+   ) {
+
+  var validateRules = validate.map(function (item) {
+    var newItem = _extends({}, item, {
+      trigger: item.trigger || [],
+    });
+    if (typeof newItem.trigger === "string") {
+      newItem.trigger = [newItem.trigger];
+    }
+    return newItem;
+  });
+  console.log("validateRules=", validateRules);
+  // 如果该字段有验证规则泽添加到validateRules队列中
+  if (rules) {
+    validateRules.push({
+      trigger: validateTrigger ? [].concat(validateTrigger) : [],
+      rules: rules,
+    });
+  }
+  console.log("validateTrigger=", validateTrigger);
+  console.log("validateRules=", validateRules);
+  return validateRules;
+}
+```
+
+
+
+#### getValidateTriggers  
+
+从normalizeValidateRules 中获取到的validateRules过滤成一个数组只要item.trigger属性该属性一般为onChange事件
+
+```
+function getValidateTriggers(validateRules) {
+  return validateRules
+    .filter(function (item) {
+      //过滤数据
+      return !!item.rules && item.rules.length;
+    })
+    .map(function (item) {
+      //只要获取trigger 一般为change
+      return item.trigger;
+    })
+    .reduce(function (pre, curr) {
+      // 连接数组
+      return pre.concat(curr);
+    }, []);
+}
+```
 
 
 

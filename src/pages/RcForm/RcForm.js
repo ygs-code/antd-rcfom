@@ -182,20 +182,20 @@ class RcForm extends React.Component {
             <div>
             {getFieldDecorator("age", {
               initialValue:18,
-              rules: [
-                { required: true, message: "Please input your note!" },
-                {
-                  validator: (rule, value, callback) => {
-                    const { getFieldValue } = this.props.form;
-                    // if (value && value !== getFieldValue("newPassword")) {
-                    callback("年龄不正确");
-                    // }
+              // rules: [
+              //   { required: true, message: "Please input your note!" },
+              //   {
+              //     validator: (rule, value, callback) => {
+              //       const { getFieldValue } = this.props.form;
+              //       // if (value && value !== getFieldValue("newPassword")) {
+              //       callback("年龄不正确");
+              //       // }
 
-                    // Note: 必须总是返回一个 callback，否则 validateFieldsAndScroll 无法响应
-                    // callback();
-                  },
-                },
-              ],
+              //       // Note: 必须总是返回一个 callback，否则 validateFieldsAndScroll 无法响应
+              //       // callback();
+              //     },
+              //   },
+              // ],
             })(<Input />)}
             {/* {(errors = getFieldError("age")) ? errors.join(",") : null} */}
             </div>

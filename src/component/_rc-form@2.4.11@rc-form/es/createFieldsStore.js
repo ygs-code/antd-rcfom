@@ -156,7 +156,7 @@ var FieldsStore = (function () {
       },
     },
     {
-      // 设置 fieldsMeta 字段信息  
+      //  设置 fieldsMeta 字段信息  设置记录fields初始化值 
       key: "setFieldMeta",
       value: function setFieldMeta(name, meta) {
         this.fieldsMeta[name] = meta;
@@ -183,7 +183,7 @@ var FieldsStore = (function () {
       },
     },
     {
-      // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
+      // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值如果获取不到则给一个空对象给他
       key: "getFieldMeta",
       value: function getFieldMeta(name) {
         this.fieldsMeta[name] = this.fieldsMeta[name] || {};

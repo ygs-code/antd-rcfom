@@ -12,7 +12,7 @@ import React from "react";
 //如果你不使用 ES6 ，你可以使用 create-react-class 方法代替： 用es5 创建一个 react 组件
 import createReactClass from "create-react-class";
 import unsafeLifecyclesPolyfill from "rc-util/es/unsafeLifecyclesPolyfill";
-//表单验证
+//表单验证 async-validator 的中文文档翻译 教程https://www.cnblogs.com/wozho/p/10955525.html
 import AsyncValidator from "async-validator";
 // 日志警告插件
 import warning from "warning";
@@ -36,7 +36,7 @@ import {
   getValidateTriggers,
   //从事件中获取值
   getValueFromEvent,
-  //校验规则
+  //判断是否有校验规则
   hasRules,
   // 得到参数，格式化整理转义参数
   getParams,
@@ -169,9 +169,12 @@ function createBaseForm(option, mixins) {
         ) {
         // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
         var fieldMeta = this.fieldsStore.getFieldMeta(name);
+        console.log('fieldMeta=',fieldMeta)
+        console.log('action=',fieldMeta)
+         
         // 判断fieldMeta 中有 事件么 如果有有则执行事件
         if (fieldMeta[action]) {
-          // 执行方法
+          // 执行onChange方法
           fieldMeta[action].apply(
             fieldMeta,
             // 数组去重
@@ -184,14 +187,14 @@ function createBaseForm(option, mixins) {
           fieldMeta.originalProps[action]
         ) {
           var _fieldMeta$originalPr;
-
+          // 执行onChange
           (_fieldMeta$originalPr = fieldMeta.originalProps)[action].apply(
             _fieldMeta$originalPr,
             // 数组去重
             _toConsumableArray(args)
           );
         }
-        //从事件中获取值
+        //从原生dom onChange事件中获取值
         var value = fieldMeta.getValueFromEvent
           ? fieldMeta.getValueFromEvent.apply(
               fieldMeta,
@@ -264,7 +267,7 @@ function createBaseForm(option, mixins) {
         this.fieldsStore.setFieldsAsDirty();
 
         var newField = _extends({}, field, {
-          //校验规则
+            //判断是否有校验规则
           dirty: hasRules(validate),
         });
 
@@ -345,7 +348,7 @@ function createBaseForm(option, mixins) {
           // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
           var fieldMeta = _this2.fieldsStore.getFieldMeta(name);
           console.log('fieldMeta=',fieldMeta)
-          debugger
+          // debugger
           var originalProps = fieldElem.props; // 获取组件属性
           // 如果不是上产环境 其实我们可以忽略警告日志
           if (process.env.NODE_ENV !== "production") {
@@ -493,7 +496,7 @@ function createBaseForm(option, mixins) {
           rules, // 校验 规则
           validateTrigger //校验子节点值的时机   //onChange 收集子节点的值的时机
         );
-        //得到所有的验证触发器
+        //得到所有的验证触发器onChange事件。
         var validateTriggers = getValidateTriggers(validateRules);
         console.log("validateTriggers=", validateTriggers);
         validateTriggers.forEach(function (action) {
@@ -508,8 +511,14 @@ function createBaseForm(option, mixins) {
             _this3.onCollectValidate
           );
         });
+        console.log('trigger validateTriggers start')
+        console.log('trigger=',trigger)
+        console.log('validateTriggers=',validateTriggers)
+        console.log('trigger validateTriggers end')
+    
 
         // make sure that the value will be collect 确保该值将被收集
+        //如果该条件成立，说明该字段没有校验器，而单独触发onChange事件
         if (trigger && validateTriggers.indexOf(trigger) === -1) {
           //获取缓存绑定 change
           inputProps[trigger] = this.getCacheBind(
@@ -832,7 +841,7 @@ function createBaseForm(option, mixins) {
           return;
         }
         
-        // 表单异步验证 第三方插件
+        // 表单异步验证插件
         var validator = new AsyncValidator(allRules);
         //整个表单校验信息 一般不会传递这个
         if (validateMessages) {
