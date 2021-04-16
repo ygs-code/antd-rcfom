@@ -1036,7 +1036,7 @@ function createBaseForm(option, mixins) {
               return !!fieldMeta.validateFirst; //当某一规则校验不通过时，是否停止剩下的规则的校验
             });
           }
-          //内部验证字段 
+          //字段校验
           _this8.validateFieldsInternal(
             fields,
             {
@@ -1149,6 +1149,7 @@ function createBaseForm(option, mixins) {
     // 高阶组件 解决在HOC中Component上面绑定的Static方法会丢失
     return argumentContainer(unsafeLifecyclesPolyfill(Form), WrappedComponent);
   };
+  
 }
 
 export default createBaseForm;

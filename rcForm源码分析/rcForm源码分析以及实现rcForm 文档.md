@@ -1,6 +1,88 @@
 #  Rc-Form源码分析
 
+大家好，欢迎同学们和我一起来学习Rc-Form源码分析， Rc-Form其实就是阿里ant design form的底层源码，今天我们来学习下Rc-Form源码分析，学习完以后我们在使用ant design form 会更加游刃有余。
+
+
+
+ 
+
+
+
+Rc-Form功能： 主要是用来 创建和收集字段的数据和校验字段错误信息，让开发程序员少代码能实现这一的功能。
+
+* 接下来我们来一起看看Rc-Form整个代码构思，Rc-Form 主要分为几个模块 createBaseForm 的 getForm 向整个组件props注入 setFieldsValue, getFieldsValue,resetFields,validateFields ，getFieldDecorator， getFieldProps。
+* createFieldsStore 是用来存储字段fields  value 和 error 和 方法。里面用到了 订阅和发布模式。类似于redux的一个东西
+
+
+
+![1](./1.jpg)
+
 ## Rc-Form文件分析
+
+接下来我们细说整个代码。
+
+首先我们需要把这个code下载下来。第一步安装node_modules
+
+```
+npm i --save rc-form
+```
+
+这样就可以把rc-form源码下载下来了，
+
+然后我们最好启动一个react项目，当然我们可以使用react-create-app创建一个react项目。
+
+然后把rc-form源码包源码最好拷贝到react项目中的scr 目录中，这样后期我们在rc-form插件中写上注释还可以保留。
+
+下载下来之后_rc-form@2.4.11@rc-form 包会有几个文件夹目录。一般webpack 默认引用的的是es包。
+
+
+
+```
+ outputpath
+├── dist  # umd module 
+     UMD（Universal Module Definition）是 AMD 和 CommonJS 的糅合，跨平台的解决方案
+     UMD 打包出来的文件可以直接通过 script 插件 html 中使用
+ ;(function(root, factory) {
+  if (typeof exports === 'object' && typeof module === 'object')
+    module.exports = factory()
+  else if (typeof define === 'function' && define.amd) define([], factory)
+  else if (typeof exports === 'object') exports['A'] = factory()
+  else root['A'] = factory()
+})(window, function() {
+  //...
+})
+    
+├── es    # es module
+ES Module 不是对象，是使用 export 显示指定输出，再通过 import 输入。此法为编译时加载，编译时遇到 import 就会生成一个只读引用。等到运行时就会根据此引用去被加载的模块取值。所以不会加载模块所有方法，仅取所需。
+export const m = 1
+export {
+  m
+}
+
+
+├── lib   # commonjs module
+   CommonJS 模块是对象，是运行时加载，运行时才把模块挂载在 exports 之上（加载整个模块的所有），加载模块其实就是查找对象属性。
+  导出使用 module.exports，也可以 exports。就是在此对象上挂属性。exports 指向 module.exports，即 exports= module.exports
+  
+ 加载模块通过 require 关键字引用
+  module.exports.add = function add() {
+  return
+}
+exports.sub = function sub() {
+  return
+}
+
+const a = require('a.js')
+
+```
+
+
+
+如果你喜欢 当然 也可以直接看 cdn 包。
+
+
+
+接下来我们来看文件
 
 ### createBaseForm.js
 
@@ -624,13 +706,169 @@ function getValidateTriggers(validateRules) {
 
 
 
+#### setFields 设置form表单值
+
+* 参数:对象key与value。重新设置表单值，
+
+* 通过循环遍历form表单值新旧值对比，如果不同则更新
+
+```
+ function setFields(fields) {
+        var _this = this;
+        // 获取字段信息
+        var fieldsMeta = this.fieldsMeta;
+        // 新字段 和 原来字段合并
+        var nowFields = _extends({}, this.fields, fields);
+        // 新的值
+        var nowValues = {};
+        // 获取字段值
+        Object.keys(fieldsMeta).forEach(function (f) {
+          // 获取字段的值
+          nowValues[f] = _this.getValueFromFields(
+            f, // 字段名称
+            nowFields // 所有字段
+          );
+        });
+        // 循环现在的值 然后注册到Meta 中 
+        Object.keys(nowValues).forEach(function (f) {
+          // 获取单个值
+          var value = nowValues[f];
+          // 获取单个字段的getFieldMeta 对象 这个是字段 信息
+          var fieldMeta = _this.getFieldMeta(f);
+          // 初始化值设定的一个函数 demo https://codepen.io/afc163/pen/JJVXzG?editors=0010
+          if (fieldMeta && fieldMeta.normalize) {
+            // 获取字段的值
+            //当前值
+            var nowValue = fieldMeta.normalize(
+              value,
+              _this.getValueFromFields(f, _this.fields),
+              nowValues
+            );
+            //如果新的值和旧的值不相同则更新新的值
+            if (nowValue !== value) {
+              nowFields[f] = _extends({}, nowFields[f], {
+                value: nowValue,
+              });
+            }
+          }
+        });
+        console.log('this.fields=', this.fields)
+         debugger
+        // 设置 字段
+        this.fields = nowFields;
+      },
+```
 
 
 
 
 
+#### validateFields  表单提交 校验所有表单值。
 
+* 表单提交前做做校验。
 
+* 获取到参数通过getParams格式处理参数，这样让函数接口兼容性更强
+
+* 然后调用validateFieldsInternal去做校验
+
+* callback 返回表单值
+
+  ```
+       //验证字段,返回promise
+        validateFields: function validateFields(ns, opt, cb) {
+          var _this8 = this;
+          console.log("this=", this);
+          console.log("this.fieldsStore=", this.fieldsStore);
+   
+      
+  
+          var pending = new Promise(function (resolve, reject) {
+            // 得到参数，格式化整理转义参数
+            var _getParams = getParams(ns, opt, cb),
+              // 获取参数的names
+              names = _getParams.names,
+              // 获取参数的options 选项
+              options = _getParams.options;
+            // 得到参数，格式化整理转义参数
+            var _getParams2 = getParams(ns, opt, cb),
+              // 获取参数的回调函数
+              callback = _getParams2.callback;
+            // 如果回调函数
+            if (!callback || typeof callback === "function") {
+              var oldCb = callback;
+              callback = function callback(errors, values) {
+                if (oldCb) {
+                  // 执行回调函数
+                  oldCb(errors, values);
+                }
+                if (errors) {
+                  // 如果有错误则执行reject
+                  reject({ errors: errors, values: values });
+                } else {
+                  // 成功执行
+                  resolve(values);
+                }
+              };
+            }
+            // 获取字段名称        从所有字段中 过滤出 maybePartialName 参数匹配到的字段
+            var fieldNames = names
+              ? _this8.fieldsStore.getValidFieldsFullName(names)
+              : _this8.fieldsStore.getValidFieldsName();
+            // 获取含有检验规则的字段
+            var fields = fieldNames
+              .filter(function (name) {
+                // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
+                var fieldMeta = _this8.fieldsStore.getFieldMeta(name);
+                //含有校验规则的字段
+                return hasRules(fieldMeta.validate);
+              })
+              .map(function (name) {
+                //获取字段
+                var field = _this8.fieldsStore.getField(name);
+                // 获取字段的值
+                field.value = _this8.fieldsStore.getFieldValue(name);
+                // 返回字段
+                return field;
+              });
+            console.log("validateFields fields=", fields);
+            // 如果没有校验字段
+            if (!fields.length) {
+              // 获取字段值
+              callback(null, _this8.fieldsStore.getFieldsValue(fieldNames));
+              return;
+            }
+            // 标志当某一规则校验不通过时，是否停止剩下的规则的校验
+            if (!("firstFields" in options)) {
+              options.firstFields = fieldNames.filter(function (name) {
+                // 获取单个字段的getFieldMeta 对象 这个是字段 信息 和设置 Meta 初始化值作用
+                var fieldMeta = _this8.fieldsStore.getFieldMeta(name);
+                return !!fieldMeta.validateFirst; //当某一规则校验不通过时，是否停止剩下的规则的校验
+              });
+            }
+            //字段校验
+            _this8.validateFieldsInternal(
+              fields,
+              {
+                fieldNames: fieldNames,
+                options: options,
+              },
+              callback
+            );
+          });
+          //俘获错误
+          pending["catch"](function (e) {
+            // eslint-disable-next-line no-console
+            if (console.error && process.env.NODE_ENV !== "production") {
+              // eslint-disable-next-line no-console
+              console.error(e);
+            }
+            return e;
+          });
+          return pending;
+        },
+  ```
+
+  
 
 
 
