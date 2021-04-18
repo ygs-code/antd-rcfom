@@ -1,17 +1,13 @@
 #  Rc-Form源码分析
 
-大家好，欢迎同学们和我一起来学习Rc-Form源码分析， Rc-Form其实就是阿里ant design form的底层源码，今天我们来学习下Rc-Form源码分析，学习完以后我们在使用ant design form 会更加游刃有余。
+大家好，很高心能和同学们一起来学习Rc-Form源码分析， Rc-Form其实就是阿里ant design form的底层源码，今天我们来学习下Rc-Form源码分析，学习完以后我们在使用ant design form 会更加游刃有余。
 
 
 
- 
-
-
-
-Rc-Form功能： 主要是用来 创建和收集字段的数据和校验字段错误信息，让开发程序员少代码能实现这一的功能。
+Rc-Form功能： 主要是用来 创建和收集字段的数据和校验字段错误信息，让开发程序员少代码能实现这个的功能。
 
 * 接下来我们来一起看看Rc-Form整个代码构思，Rc-Form 主要分为几个模块 createBaseForm 的 getForm 向整个组件props注入 setFieldsValue, getFieldsValue,resetFields,validateFields ，getFieldDecorator， getFieldProps。
-* createFieldsStore 是用来存储字段fields  value 和 error 和 方法。里面用到了 订阅和发布模式。类似于redux的一个东西
+* createFieldsStore 是用来存储字段fields  value 和 error 和 方法。里面用到了 订阅和发布模式。类似于redux的一个东西，主要核心方法：setFields，resetFields，getFieldValuePropValue， clearField，getFieldsError。
 
 
 
@@ -45,7 +41,7 @@ npm i --save rc-form
 
 然后我们最好启动一个react项目，当然我们可以使用react-create-app创建一个react项目。
 
-然后把rc-form源码包源码最好拷贝到react项目中的scr 目录中，这样后期我们在rc-form插件中写上注释还可以保留。
+然后把rc-form源码包源码最好拷贝到react项目中的src 目录中，这样后期我们在rc-form组件中写上注释，还可以保留。
 
 下载下来之后_rc-form@2.4.11@rc-form 包会有几个文件夹目录。一般webpack 默认引用的的是es包。
 

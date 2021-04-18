@@ -31,3 +31,10 @@ function createForm(options) {
 }
 
 export default createForm;
+
+
+// createForm({
+//   name:'FormName',
+// onValuesChange(){
+// }
+// })(component)

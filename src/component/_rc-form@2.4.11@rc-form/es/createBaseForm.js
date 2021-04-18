@@ -61,6 +61,7 @@ import {
 
 var DEFAULT_TRIGGER = "onChange";
 //创建表单
+
 function createBaseForm(option, mixins) {
   //获取 option参数
   option =
@@ -82,7 +83,7 @@ function createBaseForm(option, mixins) {
       _option$formPropName === undefined ? "form" : _option$formPropName, // props 的key 默认为form
     formName = option.name, // 表单名称
     withRef = option.withRef; //为包装的组件实例userefs维护一个ref。wrappedComponentto访问。
-
+ 
   // 封装高阶组件，为下游WrappedComponent组件注入this.props.form工具函数集等
   return function decorate(
     WrappedComponent //组件传入进来
@@ -91,7 +92,8 @@ function createBaseForm(option, mixins) {
     var Form = createReactClass({
       displayName: "Form",
       // 添加拓展参数
-      mixins: mixins,
+      mixins: mixins,  // this.getForm
+
       // 初始化 state 生命周期
       getInitialState: function getInitialState() {
         var _this = this;
@@ -413,6 +415,7 @@ function createBaseForm(option, mixins) {
             )
           );
         };
+
       },
       // 创建待验证的表单 设置字段元数据，返回 计算被修饰组件的属性
       getFieldProps: function getFieldProps(name) {
@@ -498,6 +501,7 @@ function createBaseForm(option, mixins) {
           validateTrigger //校验子节点值的时机   //onChange 收集子节点的值的时机
         );
         //得到所有的验证触发器onChange事件。
+         //该字段有校验器，然后触发onChange事件
         var validateTriggers = getValidateTriggers(validateRules);
         console.log("validateTriggers=", validateTriggers);
         validateTriggers.forEach(function (action) {
@@ -1118,6 +1122,10 @@ function createBaseForm(option, mixins) {
 
         // 为对象添加 描述设置属性 或者是为对象添加 属性或者方法
         var formProps = _defineProperty({}, formPropName, this.getForm());
+        // formProps={
+        //   ...formPropName,
+        //   ...this.getForm()
+        // }
 
         if (withRef) {
           if (
@@ -1136,7 +1144,7 @@ function createBaseForm(option, mixins) {
         }
         //   拷贝返回一个新的对象
         var props = mapProps.call(this, _extends({}, formProps, restProps));
-        console.log("props================", props);
+  
         // 创建 真实dom
         return React.createElement(
           // 高姐组件
@@ -1151,5 +1159,8 @@ function createBaseForm(option, mixins) {
   };
   
 }
+
+
+ 
 
 export default createBaseForm;

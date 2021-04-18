@@ -89,6 +89,10 @@ var FieldsStore = (function () {
       // 设置字段 新的值
       key: "setFields",
       value: function setFields(fields) {
+
+        // {
+        //   name:value,
+        // }
         var _this = this;
         // 获取字段信息
         var fieldsMeta = this.fieldsMeta;
