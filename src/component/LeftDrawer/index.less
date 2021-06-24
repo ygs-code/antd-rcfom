@@ -1,0 +1,48 @@
+.left-drawer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  width: auto;
+  display: inline-block;
+  height: 100vh;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  list-style: none;
+  vertical-align: top;
+  background: white;
+  border-right:solid #ccc 1px;
+  transition: all 0.5s;
+
+  > .left{
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -ms-box-flex: 1;
+    -webkit-box-flex-group: 1;
+    -moz-box-flex-group: 1;
+    -ms-box-flex-group: 1;   
+  }
+  > .right-box {
+    width: 32px;
+    height: 32px;
+    // background: darkblue;
+    position: absolute;
+    top: 50%;
+    right: -32px;
+    margin-top: -16px;
+    font-size: 30px;
+    cursor: pointer;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+
+    i{
+        display: block;
+        margin: 0;
+        padding: 0;
+        color: rgb(179, 204, 249);
+    }
+  }
+}

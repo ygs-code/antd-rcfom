@@ -1,8 +1,19 @@
+/*
+ * @Author: your name
+ * @Date: 2020-06-24 14:11:24
+ * @LastEditTime: 2021-04-23 11:42:39
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /antd-rcfom/src/pages/Form/Form.js
+ */
 import React, { Component } from 'react';
 // import Button from 'antd/es/button';
 // import { Icon, Button } from 'antd';
 import './Form.less';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
+
+console.log('process.env.NODE_ENV=',process.env.NODE_ENV)
+console.log('process.argv=',process.argv)
 
 class NormalLoginForm extends React.Component {
   handleSubmit = e => {

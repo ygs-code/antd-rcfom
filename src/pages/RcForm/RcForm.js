@@ -5,7 +5,8 @@ import "./RcForm.less";
 import { Icon, Input, Button, Checkbox, Form } from "antd";
 
 import { createForm, formShape } from "@/component/_rc-form@2.4.11@rc-form";
-
+console.log('process.env.NODE_ENV=',process.env.NODE_ENV)
+console.log('process.argv=',process.argv)
 class Item extends React.Component {
   constructor(props){
     super(props);
