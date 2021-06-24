@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-16 17:24:20
- * @LastEditTime: 2021-06-24 15:52:38
+ * @LastEditTime: 2021-06-24 19:44:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/pages/LogicFlow/index.js
@@ -20,6 +20,7 @@ import sms from "@/image/sms.jpg";
 import modeltplate from "@/image/modeltplate.jpg";
 import quan from "@/image/quan.jpg";
 import start from "@/image/start.jpg";
+import { v4 as uuidv4 } from 'uuid';
 import "./index.less";
 
 // console.log("start=", start);
