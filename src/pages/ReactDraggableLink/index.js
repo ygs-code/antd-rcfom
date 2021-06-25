@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-16 17:24:20
- * @LastEditTime: 2021-06-25 10:54:23
+ * @LastEditTime: 2021-06-25 11:14:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/pages/LogicFlow/index.js
@@ -265,11 +265,12 @@ class Index extends React.Component {
           linkDataArray[parentLinkIndex].to = key;
 
           const newNodeData = {
+            parentKey,
             key,
             // topText: "新的节点",
             rightText: text,
             icon: src,
-            xy: `${parentX} ${+parentY + 300}`,
+            xy: `${parentX} ${+parentY + 230}`,
           };
 
           const newLinkDataArray = {
@@ -277,12 +278,12 @@ class Index extends React.Component {
             from: key,
             to: "",
             points: [
-              parentX,
-              +parentY + 300 + 38,
-              parentX,
-              +parentY + 300 + 190,
-              parentX,
-              +parentY + 300 + 190,
+              +parentX,
+              +parentY + 230 + 38,
+              +parentX,
+              +parentY + 230 + 190,
+              +parentX,
+              +parentY + 230 + 190,
             ],
           };
 
