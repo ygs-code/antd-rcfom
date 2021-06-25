@@ -257,9 +257,11 @@ class Index extends React.Component {
 
           const newNodeData = {
             uuid,
-            // topText: "新的节点",
+            topText: "新的节点",
             rightText: text,
             icon: src,
+            xy: "-1 316",
+            key: -2,
           };
 
           // _this.myDiagram.model.commit(function (m) {
@@ -288,7 +290,13 @@ class Index extends React.Component {
 
           _this.setState({
             nodeDataArray: [...nodeDataArray, newNodeData],
-            linkDataArray,
+            linkDataArray: [
+              {
+                from: -1,
+                to: -2,
+                key: -1,
+              },
+            ],
           });
 
           // _this.load({
@@ -451,7 +459,7 @@ class Index extends React.Component {
         const data = m?.part?.data;
         console.log("v=======", v);
         console.log("data=======", data);
-        return  `${direction}-${v}`;
+        return `${direction}-${v}`;
       })
     );
   };

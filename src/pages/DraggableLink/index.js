@@ -413,7 +413,7 @@ class Index extends React.Component {
         // v 是当前uui数据，m中的
         const data = m?.part?.data;
         console.log("v=======", v);
-        console.log("data=======", data);
+        console.log("makeport data=======", data);
         return v;
       })
     );
@@ -745,7 +745,12 @@ class Index extends React.Component {
           //   return v.buttomText
           // })
           new go.Binding("text", "leftButtomText") // 映射key
-        )
+        ),
+        {
+          click: (e, obj) => {
+            console.log("点击节点---->", obj.part.data);
+          },
+        }
       ),
       // four small named ports, one on each side: //四个连线端口
 
@@ -960,10 +965,7 @@ class Index extends React.Component {
     // this.myDiagram.layout = new go.Layout();
     // // this.myDiagram.model = $(go.GraphLinksModel, json);
     const { nodeDataArray, linkDataArray } = json;
-    this.myDiagram.model = new go.GraphLinksModel(
-      nodeDataArray,
-      linkDataArray
-    );
+    this.myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
     // this.loadDiagramProperties(); // do this after the Model.modelData has been brought into memory 在模型之后这样做。modelData已被带入内存
   };
   // 添加节点
