@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-16 17:24:20
- * @LastEditTime: 2021-06-24 21:32:39
+ * @LastEditTime: 2021-06-25 09:33:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/pages/LogicFlow/index.js
@@ -234,7 +234,7 @@ class Index extends React.Component {
           const { fromPort: parentUuid } = _this.data.highlightedData;
           // const JsonData = JSON.parse(_this.save());
           // const { nodeDataArray = [], linkDataArray = [] } = JsonData;
-          const { nodeDataArray = [], linkDataArray = [] } = this.state;
+          const { nodeDataArray = [], linkDataArray = [] } = _this.state;
           // 找到父亲节点
           const parentNodeData = nodeDataArray.find((item) => {
             return item.uuid == parentUuid;
@@ -420,11 +420,13 @@ class Index extends React.Component {
     });
   };
   // 画端口
-  makePort = (
-    spot,
-    output, // 是否是输出
-    input // 是否是输入
-  ) => {
+  makePort = (value) => {
+    const {
+      direction,
+      spot,
+      output, // 是否是输出
+      input, // 是否是输入
+    } = value;
     const $ = this.$;
     // the port is basically just a small transparent circle 这个端口基本上就是一个透明的小圆圈
     return $(
@@ -449,7 +451,7 @@ class Index extends React.Component {
         const data = m?.part?.data;
         console.log("v=======", v);
         console.log("data=======", data);
-        return v;
+        return  `${direction}-${v}`;
       })
     );
   };
@@ -784,11 +786,30 @@ class Index extends React.Component {
       ),
       // four small named ports, one on each side: //四个连线端口
 
-      this.makePort(go.Spot.Top, false, true),
-      this.makePort(go.Spot.Left, true, true),
-      this.makePort(go.Spot.Right, true, true),
-      this.makePort(go.Spot.Bottom, true, false),
-
+      this.makePort({
+        direction: "T",
+        spot: go.Spot.Top,
+        output: false, // 是否是输出
+        input: true, // 是否是输入
+      }),
+      this.makePort({
+        direction: "B",
+        spot: go.Spot.Bottom,
+        output: true, // 是否是输出
+        input: false, // 是否是输入
+      }),
+      this.makePort({
+        direction: "L",
+        spot: go.Spot.Left,
+        output: true, // 是否是输出
+        input: true, // 是否是输入
+      }),
+      this.makePort({
+        direction: "R",
+        spot: go.Spot.Right,
+        output: true, // 是否是输出
+        input: true, // 是否是输入
+      }),
       {
         // handle mouse enter/leave events to show/hide the ports //处理鼠标输入/离开事件来显示/隐藏端口
         mouseEnter: function (e, node) {
