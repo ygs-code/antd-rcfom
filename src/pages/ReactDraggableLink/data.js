@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-24 19:39:29
- * @LastEditTime: 2021-06-24 21:30:12
+ * @LastEditTime: 2021-06-25 10:43:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/pages/DraggableLink/data.js
@@ -23,14 +23,17 @@ const data = {
   ],
   linkDataArray: [
     {
-      from: -1,
-      fromPort: "a340f339-d035-4919-bbe0-e8a4334bf7c7",
-      toPort: "",
+      key: "8f03fc88-5446-4fc1-8f5e-08faf26a8ead",
+      from: "12a946e2-fda8-41e1-9741-a15918542bce",
+      to: "",
       points: [
-        -1, 33.28239746093752, -1, 43.28239746093752, -1, 111.64119873046876,
-        -1, 111.64119873046876, -1, 180, -1, 190,
+        -1, 33.28239746093752,
+        -1, 43.28239746093752, 
+        -1, 111.64119873046876,
+        -1, 111.64119873046876, 
+        -1, 180, 
+        -1, 190,
       ],
-      key: -1,
     },
   ],
 };
