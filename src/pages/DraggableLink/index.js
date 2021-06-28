@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-16 17:24:20
- * @LastEditTime: 2021-06-24 21:04:25
+ * @LastEditTime: 2021-06-28 10:45:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/pages/LogicFlow/index.js
@@ -952,7 +952,7 @@ class Index extends React.Component {
       },
     };
     // delete json.class;
-    this.myDiagram.layout = new go.Layout();
+    // this.myDiagram.layout = new go.Layout();
     // this.myDiagram.model = go.Model.fromJson(
     //   json
     //   // document.getElementById("mySavedModel").value
