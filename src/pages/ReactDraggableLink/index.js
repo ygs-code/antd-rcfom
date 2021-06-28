@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-16 17:24:20
- * @LastEditTime: 2021-06-25 11:14:02
+ * @LastEditTime: 2021-06-28 10:37:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/pages/LogicFlow/index.js
@@ -240,30 +240,26 @@ class Index extends React.Component {
           const parentNodeData = nodeDataArray.find((item) => {
             return item.key == parentKey;
           });
-          // 找到父亲线节点
+          // 找到父亲线节点Index
           const parentLinkIndex = linkDataArray.findIndex((item) => {
             return item.from == parentKey;
           });
 
-          console.log("parentNodeData.xy====", parentNodeData);
-          console.log("parentNodeData.xy====", parentNodeData.xy);
-          const parentXY = parentNodeData.xy.split(" ");
-          console.log("parentXY====", parentXY);
-          console.log("parentNodeData====", parentNodeData);
-          const parentX = parentXY[0];
-          const parentY = parentXY[1];
+          // 找到父亲线节点
+          const parentLinkData = linkDataArray.find((item) => {
+            return item.from == parentKey;
+          });
 
-          // const parentLinkData = nodeDataArray.find((item) => {
-          //   return item.key == parentKey;
-          // });
-
+          const { to, from, key: linkKey, points } = parentLinkData;
           // 插入节点
           const key = _this.getUuid();
           const { src, text } = JSON.parse(
             event.dataTransfer.getData("data") || "{}"
           );
-          linkDataArray[parentLinkIndex].to = key;
-
+          let newLinkDataArray = {};
+          const parentXY = parentNodeData.xy.split(" ");
+          const parentX = parentXY[0];
+          const parentY = parentXY[1];
           const newNodeData = {
             parentKey,
             key,
@@ -273,19 +269,63 @@ class Index extends React.Component {
             xy: `${parentX} ${+parentY + 230}`,
           };
 
-          const newLinkDataArray = {
-            key: _this.getUuid(),
-            from: key,
-            to: "",
-            points: [
-              +parentX,
-              +parentY + 230 + 38,
-              +parentX,
-              +parentY + 230 + 190,
-              +parentX,
-              +parentY + 230 + 190,
-            ],
-          };
+          if (to) {
+            const nextNodeData = nodeDataArray.find((item) => {
+              return item.key == to;
+            });
+            
+            const nextNodeLinkData = linkDataArray.find((item) => {
+              return item.from == to;
+            });
+            const nextNodeLinkIndex = linkDataArray.findIndex((item) => {
+              return item.from == to;
+            });
+            console.log("nextNodeLinkData======", nextNodeLinkData);
+            console.log("nextNodeData======", nextNodeData);
+            //已经有子节点
+            linkDataArray[parentLinkIndex].to = key;
+            newLinkDataArray = {
+              key: key, // _this.getUuid(),
+              from: key,
+              to: nextNodeLinkData.from,
+              points: [
+                +parentX,
+                +parentY + 230 + 38,
+                +parentX,
+                +parentY + 230 + 190,
+                +parentX,
+                +parentY + 230 + 190,
+              ],
+            };
+            // 算坐标
+
+
+          } else {
+            //没有子节点
+            linkDataArray[parentLinkIndex].to = key;
+            newLinkDataArray = {
+              key: _this.getUuid(),
+              from: key,
+              to: "",
+              points: [
+                +parentX,
+                +parentY + 230 + 38,
+                +parentX,
+                +parentY + 230 + 190,
+                +parentX,
+                +parentY + 230 + 190,
+              ],
+            };
+          }
+
+          console.log("parentLinkData==", parentLinkData);
+          // debugger;
+
+          console.log("parentNodeData.xy====", parentNodeData);
+          console.log("parentNodeData.xy====", parentNodeData.xy);
+
+          console.log("parentXY====", parentXY);
+          console.log("parentNodeData====", parentNodeData);
 
           // _this.myDiagram.model.commit(function (m) {
           //   // alternate between lightblue and lightgreen colors
@@ -502,6 +542,36 @@ class Index extends React.Component {
         if (idx >= 0) document.title = document.title.substr(0, idx);
       }
     });
+
+    // // 自动布局
+    // myDiagram.layout = $(go.TreeLayout, {
+    //   treeStyle: go.TreeLayout.StyleLastParents,
+    //   arrangement: go.TreeLayout.ArrangementHorizontal,
+    //   // properties for most of the tree:
+    //   angle: 90,
+    //   layerSpacing: 100, // 父子与子节点之间距离
+    //   nodeSpacing: 100, // 兄弟节点之间距离
+    //   alignment: go.TreeLayout.AlignmentCenterChildren, //对齐:父节点与其子节点的相对位置。
+    //   sorting: go.TreeLayout.SortingForwards, //获取或设置用于对顶点的直接子节点排序的默认排序策略。必须TreeLayout.SortingForwards, TreeLayout.SortingReverse, TreeLayout.SortingAscending, TreeLayout.SortingDescending.
+    //   comparer: function (va, vb) {
+    //     //指定父节点的直接子节点的顺序。
+    //     var da = va.node.data;
+    //     var db = vb.node.data;
+    //     if (da.someProperty < db.someProperty) return -1;
+    //     if (da.someProperty > db.someProperty) return 1;
+    //     return 0;
+    //   },
+    //   layerStyle: go.TreeLayout.LayerIndividual, //获取或设置节点按层对齐的方式。必须   TreeLayout.LayerIndividual, TreeLayout.LayerSiblings, or TreeLayout.LayerUniform.
+    //   setsPortSpot: true,
+    //   setsChildPortSpot: true,
+
+    //   // properties for the "last parents":
+    //   alternateAngle: 90,
+    //   alternateLayerSpacing: 35,
+    //   alternateAlignment: go.TreeLayout.AlignmentBus,
+    //   alternateNodeSpacing: 200,
+    //   columnSpacing: 1000,
+    // });
   };
   // 画端口
   makePort = (
@@ -912,12 +982,22 @@ class Index extends React.Component {
         selectionAdornmentTemplate: linkSelectionAdornmentTemplate,
       },
       { relinkableFrom: true, relinkableTo: true, reshapable: true },
+      // {
+      //   routing: go.Link.AvoidsNodes,
+      //   curve: go.Link.JumpOver,
+      //   corner: 5,
+      //   toShortLength: 4,
+      // },
       {
-        routing: go.Link.AvoidsNodes,
+        // routing: go.Link.AvoidsNodes,
+        routing: go.Link.Orthogonal,
         curve: go.Link.JumpOver,
-        corner: 5,
-        toShortLength: 4,
+        // routing: go.Link.Orthogonal,
+        // curve: go.Link.JumpOver,
+        corner: 10,
+        toShortLength: 20,
       },
+
       new go.Binding("points").makeTwoWay(),
 
       $(
@@ -1226,7 +1306,8 @@ class Index extends React.Component {
       <div>
         <LeftDrawer>
           <div className="menu">
-            <div id="paletteZone">
+            {/*  <div id="paletteZone">
+             
               <div text="Water" className="draggable" draggable="true">
                 Water
               </div>
@@ -1237,6 +1318,7 @@ class Index extends React.Component {
                 Tea
               </div>
             </div>
+          */}
             <ul className="">
               <li draggable="true" className="draggable">
                 <img
