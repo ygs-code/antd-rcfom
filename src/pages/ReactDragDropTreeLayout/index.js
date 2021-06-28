@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-16 17:24:20
- * @LastEditTime: 2021-06-28 14:25:41
+ * @LastEditTime: 2021-06-28 14:32:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/pages/LogicFlow/index.js
@@ -490,10 +490,9 @@ class Index extends React.Component {
               linkDataArray: [...linkDataArray, newLinkDataArray],
             },
             () => {
-              setTimeout(()=>{
+              setTimeout(() => {
                 _this.lastNodeLinkXY();
-              },2000)
-              
+              }, 2000);
             }
           );
 
@@ -786,8 +785,6 @@ class Index extends React.Component {
 
   lastNodeLinkXY = () => {
     const { linkDataArray, nodeDataArray } = JSON.parse(this.save());
-    // linkDataArray
-
     for (let [index, item] of linkDataArray.entries()) {
       const { to, from } = item;
       if (!to) {
@@ -795,7 +792,6 @@ class Index extends React.Component {
         const lastNode = nodeDataArray.find((item) => {
           return item.key == from;
         });
-
         const lastNodeXY = lastNode.xy.split(" ");
         const lastNodeX = lastNodeXY[0];
         const lastNodeY = lastNodeXY[1];
@@ -807,18 +803,10 @@ class Index extends React.Component {
           +lastNodeX,
           +lastNodeY + 230 + 190,
         ];
-        debugger
-       this.setState({
-        linkDataArray
-       })
-        // points: [
-        //   +parentX,
-        //   +parentY + 230 + 38,
-        //   +parentX,
-        //   +parentY + 230 + 190,
-        //   +parentX,
-        //   +parentY + 230 + 190,
-        // ],
+
+        this.setState({
+          linkDataArray,
+        });
       }
     }
     console.log("dataJSON==", nodeDataArray);
