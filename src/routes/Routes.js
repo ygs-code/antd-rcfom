@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-24 14:11:24
- * @LastEditTime: 2021-06-24 21:13:14
+ * @LastEditTime: 2021-06-28 11:43:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/routes/Routes.js
@@ -23,6 +23,7 @@ const DraggableLink = lazy(() => import("../pages/DraggableLink"));
 const ReactDraggableLink = lazy(() => import("../pages/ReactDraggableLink"));
 const ReactGoJS = lazy(() => import("../pages/ReactGoJS"));
 const ReactDragDrop = lazy(() => import("../pages/ReactDragDrop"));
+const ReactDragDropTreeLayout = lazy(() => import("../pages/ReactDragDropTreeLayout"));
 
 function Routes() {
   return (
@@ -42,6 +43,7 @@ function Routes() {
           <Route path="/ReactDraggableLink" component={ReactDraggableLink} />
           <Route path="/ReactDragDrop" component={ReactDragDrop} />
           <Route path="/ReactGoJS" component={ReactGoJS} />
+          <Route path="/ReactDragDropTreeLayout" component={ReactDragDropTreeLayout} />
         </Switch>
       </Suspense>
     </Router>
