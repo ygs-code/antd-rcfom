@@ -22,6 +22,7 @@ const IVRtree = lazy(() => import("../pages/IVRtree"));
 const DraggableLink = lazy(() => import("../pages/DraggableLink"));
 const ReactDraggableLink = lazy(() => import("../pages/ReactDraggableLink"));
 const ReactGoJS = lazy(() => import("../pages/ReactGoJS"));
+const ReactDragDrop = lazy(() => import("../pages/ReactDragDrop"));
 
 function Routes() {
   return (
@@ -39,6 +40,7 @@ function Routes() {
           <Route path="/IVRtree" component={IVRtree} />
           <Route path="/DraggableLink" component={DraggableLink} />
           <Route path="/ReactDraggableLink" component={ReactDraggableLink} />
+          <Route path="/ReactDragDrop" component={ReactDragDrop} />
           <Route path="/ReactGoJS" component={ReactGoJS} />
         </Switch>
       </Suspense>
