@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-16 17:24:20
- * @LastEditTime: 2021-06-29 17:45:07
+ * @LastEditTime: 2021-06-29 18:48:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/pages/LogicFlow/index.js
@@ -159,11 +159,27 @@ class Index extends React.Component {
           //   190 + 76 + 152,
           // ],
         },
+        {
+          key: this.getUuid(),
+          from: "0-0-0",
+          //  to: "0-0-0",
+          // upArrow: "\uf055",
+           dowArrow: "\uf055",
+          // points: [100, 190 + 76, 100, 190 + 76 + 152],
+        },
+        {
+          key: this.getUuid(),
+          from: "0-2",
+          //  to: "0-0-0",
+          // upArrow: "\uf055",
+          dowArrow: "\uf055",
+          // points: [100, 190 + 76, 100, 190 + 76 + 152],
+        },
       ],
     };
   }
   // 添加坐标
-  addYX = (
+  addNodeYX = (
     treeData,
     source,
     { spacingX = 200, spacingY = 300, parentData = {} } = {}
@@ -338,8 +354,21 @@ class Index extends React.Component {
 
       return {
         ...item,
-        children: this.addYX(newChilern, source),
+        children: this.addNodeYX(newChilern, source),
       };
+    });
+  };
+
+  addLinkYX = (linkDataArray, treeData) => {
+    return linkDataArray.map((item) => {
+      const { from, to } = item;
+      if (to) {
+        delete item.points;
+      } else {
+        const { x, y } = this.findTreeData(treeData, from, "key");
+        item.points = [x, y+38, x, y + 150, x, y + 150];
+      }
+      return item;
     });
   };
   // 搜索到树数据的某一条数据单条 不包括父层数据的
@@ -1954,12 +1983,19 @@ class Index extends React.Component {
   };
 
   componentDidMount() {
+    const {
+      linkDataArray
+    }=this.state
     let treeData = this.transformTrre(this.state.nodeDataArray);
-    let treeXYData = this.addYX(treeData, this.addYX(treeData, treeData));
+    let treeXYData = this.addNodeYX(
+      treeData,
+      this.addNodeYX(treeData, treeData)
+    );
     console.log("treeXYData===", treeXYData);
     console.log("flatTree==", this.flatTree(treeXYData));
     this.setState({
       nodeDataArray: this.flatTree(treeXYData),
+      linkDataArray: this.addLinkYX(linkDataArray,treeXYData),        
     });
     // this.init();
     //添加拖拽事件
