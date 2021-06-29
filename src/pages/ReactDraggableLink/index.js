@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-16 17:24:20
- * @LastEditTime: 2021-06-28 10:37:02
+ * @LastEditTime: 2021-06-29 20:17:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/pages/LogicFlow/index.js
@@ -611,6 +611,7 @@ class Index extends React.Component {
   setNodeTemplate = () => {
     const $ = this.$;
     const myDiagram = this.myDiagram;
+    let _this=this;
     var nodeSelectionAdornmentTemplate = $(
       go.Adornment,
       "Auto",
@@ -946,10 +947,10 @@ class Index extends React.Component {
       {
         // handle mouse enter/leave events to show/hide the ports //处理鼠标输入/离开事件来显示/隐藏端口
         mouseEnter: function (e, node) {
-          // showSmallPorts(node, true);
+          _this.showSmallPorts(node, true);
         },
         mouseLeave: function (e, node) {
-          // showSmallPorts(node, false);
+          _this.showSmallPorts(node, false);
         },
       }
     );
@@ -1173,6 +1174,7 @@ class Index extends React.Component {
   };
   //鼠标放上去显示影藏端口
   showSmallPorts = (node, show) => {
+    
     node.ports.each(function (port) {
       if (port.portId !== "") {
         // don't change the default port, which is the big shape //不改变默认端口，这是一个大的形状

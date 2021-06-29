@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-16 17:24:20
- * @LastEditTime: 2021-06-29 18:48:16
+ * @LastEditTime: 2021-06-29 20:36:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/pages/LogicFlow/index.js
@@ -79,7 +79,6 @@ class Index extends React.Component {
           key: "0-0-0",
         },
       ],
-      // text: "\uf055",
       linkDataArray: [
         {
           key: this.getUuid(),
@@ -164,7 +163,7 @@ class Index extends React.Component {
           from: "0-0-0",
           //  to: "0-0-0",
           // upArrow: "\uf055",
-           dowArrow: "\uf055",
+          dowArrow: "\uf055",
           // points: [100, 190 + 76, 100, 190 + 76 + 152],
         },
         {
@@ -366,7 +365,7 @@ class Index extends React.Component {
         delete item.points;
       } else {
         const { x, y } = this.findTreeData(treeData, from, "key");
-        item.points = [x, y+38, x, y + 150, x, y + 150];
+        item.points = [x, y + 38, x, y + 150, x, y + 150];
       }
       return item;
     });
@@ -1178,6 +1177,7 @@ class Index extends React.Component {
   setNodeTemplate = () => {
     const $ = this.$;
     const myDiagram = this.myDiagram;
+    let _this = this;
     var nodeSelectionAdornmentTemplate = $(
       go.Adornment,
       "Auto",
@@ -1286,7 +1286,7 @@ class Index extends React.Component {
       ),
       // 是否选中
       {
-        selectable: true,
+        selectable: false,
         selectionAdornmentTemplate: nodeSelectionAdornmentTemplate,
       },
 
@@ -1518,10 +1518,10 @@ class Index extends React.Component {
       {
         // handle mouse enter/leave events to show/hide the ports //处理鼠标输入/离开事件来显示/隐藏端口
         mouseEnter: function (e, node) {
-          // showSmallPorts(node, true);
+          _this.showSmallPorts(node, true);
         },
         mouseLeave: function (e, node) {
-          // showSmallPorts(node, false);
+          _this.showSmallPorts(node, false);
         },
       }
     );
@@ -1541,8 +1541,9 @@ class Index extends React.Component {
         {
           isPanelMain: true,
           fill: null,
-          stroke: "deepskyblue",
+          // stroke: "deepskyblue",
           strokeWidth: 0,
+          stroke: "red",
         }
       ) // use selection object's strokeWidth //使用选择对象的strokeWidth
     );
@@ -1550,10 +1551,14 @@ class Index extends React.Component {
     myDiagram.linkTemplate = $(
       go.Link, // the whole link panel //整个链接面板
       {
-        selectable: true,
+        selectable: false,
         selectionAdornmentTemplate: linkSelectionAdornmentTemplate,
       },
-      { relinkableFrom: true, relinkableTo: true, reshapable: true },
+      {
+        relinkableFrom: true,
+        relinkableTo: true,
+        reshapable: true,
+      },
       {
         routing: go.Link.AvoidsNodes,
         curve: go.Link.JumpOver,
@@ -1561,6 +1566,7 @@ class Index extends React.Component {
         toShortLength: 4,
       },
       new go.Binding("points").makeTwoWay(),
+      // $(go.Shape, { strokeWidth: 1.5, stroke: "red" })), // the link shape
 
       $(
         go.Panel,
@@ -1570,6 +1576,7 @@ class Index extends React.Component {
           segmentOrientation: go.Link.OrientUpright,
           segmentIndex: 1,
           segmentFraction: 0.5,
+          //  stroke: "red"
         },
 
         // this whole Panel is a link label
@@ -1583,10 +1590,18 @@ class Index extends React.Component {
 
         $(
           go.TextBlock,
+
           // {
           //     color:'red',
           // },
-          { margin: 5 },
+          {
+            margin: 5,
+            cursor: "pointer",
+            // stroke: "red", // 箭头颜色
+            //  color:'red',
+            //   stroke: "red", // 线颜色
+            //  fill: "red", // 线颜色
+          },
 
           // Shape.fill is bound to Node.data.color
           // new go.Binding("fill", "color"),
@@ -1627,11 +1642,14 @@ class Index extends React.Component {
             // drop: () => {
             //   console.log("drop=");
             // },
-            mouseEnter: () => {
+            mouseEnter: function (e, node) {
               console.log("mouseEnter=");
+              _this.showSmallPorts(node, true);
+              // this.showSmallPorts(node, true);
             },
-            mouseLeave: () => {
+            mouseLeave: function (e, node) {
               console.log("mouseLeave=");
+              // this.showSmallPorts(node, true);
             },
 
             //FontAwesome
@@ -1706,7 +1724,7 @@ class Index extends React.Component {
 
           {
             // fill: "white" ,
-
+            cursor: "pointer",
             click: () => {
               console.log("click=");
             },
@@ -1731,11 +1749,13 @@ class Index extends React.Component {
             // drop: () => {
             //   console.log("drop=");
             // },
-            mouseEnter: () => {
+            mouseEnter: function (e, node) {
               console.log("mouseEnter=");
+              _this.showSmallPorts(node, true);
             },
-            mouseLeave: () => {
+            mouseLeave: function (e, node) {
               console.log("mouseLeave=");
+              _this.showSmallPorts(node, false);
             },
 
             //FontAwesome
@@ -1769,14 +1789,22 @@ class Index extends React.Component {
         // // $(go.Part, $(go.Picture, cat)),
         // $(go.TextBlock, { margin: 3 }, new go.Binding("text", "text"))
       ),
-
       $(
         go.Shape, // the link path shape //链接路径形状
-        { isPanelMain: true, strokeWidth: 2 }
+        {
+          isPanelMain: true,
+          strokeWidth: 1, // 线大小
+          stroke: "red", // 边框 线颜色
+          fill: "red", // 背景 线颜色
+        }
       ),
       $(
         go.Shape, // the arrowhead //箭头
-        { toArrow: "Standard", stroke: null }
+        {
+          toArrow: "Standard",
+          stroke: "red", // 箭头颜色
+          fill: "red", // 箭头颜色
+        }
       ),
       $(
         go.Panel,
@@ -1840,12 +1868,22 @@ class Index extends React.Component {
   };
   //鼠标放上去显示影藏端口
   showSmallPorts = (node, show) => {
-    node.ports.each(function (port) {
-      if (port.portId !== "") {
-        // don't change the default port, which is the big shape //不改变默认端口，这是一个大的形状
-        port.fill = show ? "rgba(0,0,0,.3)" : null;
-      }
-    });
+    const {
+      part: {
+        data: { from, to, key },
+      },
+    } = node;
+    console.log("node====", node);
+    console.log("node.ports====", node.ports);
+    console.log("node.ports====", node.part);
+
+    // node.ports.each(function (port) {
+    //   console.log('port====',port)
+    //   if (port.portId !== "") {
+    //     // don't change the default port, which is the big shape //不改变默认端口，这是一个大的形状
+    //     port.fill = show ? "rgba(0,0,0,.3)" : null;
+    //   }
+    // });
   };
   // 在模型之后这样做。modelData已被带入内存
   loadDiagramProperties = (e) => {
@@ -1983,21 +2021,17 @@ class Index extends React.Component {
   };
 
   componentDidMount() {
-    const {
-      linkDataArray
-    }=this.state
+    const { linkDataArray } = this.state;
+
     let treeData = this.transformTrre(this.state.nodeDataArray);
     let treeXYData = this.addNodeYX(
       treeData,
       this.addNodeYX(treeData, treeData)
     );
-    console.log("treeXYData===", treeXYData);
-    console.log("flatTree==", this.flatTree(treeXYData));
     this.setState({
       nodeDataArray: this.flatTree(treeXYData),
-      linkDataArray: this.addLinkYX(linkDataArray,treeXYData),        
+      linkDataArray: this.addLinkYX(linkDataArray, treeXYData),
     });
-    // this.init();
     //添加拖拽事件
     this.documentDrag();
     this.divDrag();
