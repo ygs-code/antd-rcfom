@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-24 14:11:24
- * @LastEditTime: 2021-06-28 11:43:25
+ * @LastEditTime: 2021-06-28 14:47:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/routes/Routes.js
@@ -23,10 +23,11 @@ const DraggableLink = lazy(() => import("../pages/DraggableLink"));
 const ReactDraggableLink = lazy(() => import("../pages/ReactDraggableLink"));
 const ReactGoJS = lazy(() => import("../pages/ReactGoJS"));
 const ReactDragDrop = lazy(() => import("../pages/ReactDragDrop"));
+const ReactTreeLayout = lazy(() => import("../pages/ReactTreeLayout"));
 const ReactDragDropTreeLayout = lazy(() =>
   import("../pages/ReactDragDropTreeLayout")
 );
-const ReactTreeLayout = lazy(() => import("../pages/ReactTreeLayout"));
+const DraggableManualLink = lazy(() => import("../pages/DraggableManualLink"));
 
 function Routes() {
   return (
@@ -46,11 +47,12 @@ function Routes() {
           <Route path="/ReactDraggableLink" component={ReactDraggableLink} />
           <Route path="/ReactDragDrop" component={ReactDragDrop} />
           <Route path="/ReactGoJS" component={ReactGoJS} />
+          <Route path="/ReactTreeLayout" component={ReactTreeLayout} />
           <Route
             path="/ReactDragDropTreeLayout"
             component={ReactDragDropTreeLayout}
           />
-          <Route path="/ReactTreeLayout" component={ReactTreeLayout} />
+          <Route path="/DraggableManualLink" component={DraggableManualLink} />
         </Switch>
       </Suspense>
     </Router>
