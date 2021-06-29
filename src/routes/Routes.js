@@ -23,7 +23,10 @@ const DraggableLink = lazy(() => import("../pages/DraggableLink"));
 const ReactDraggableLink = lazy(() => import("../pages/ReactDraggableLink"));
 const ReactGoJS = lazy(() => import("../pages/ReactGoJS"));
 const ReactDragDrop = lazy(() => import("../pages/ReactDragDrop"));
-const ReactDragDropTreeLayout = lazy(() => import("../pages/ReactDragDropTreeLayout"));
+const ReactTreeLayout = lazy(() => import("../pages/ReactTreeLayout"));
+const ReactDragDropTreeLayout = lazy(() =>
+  import("../pages/ReactDragDropTreeLayout")
+);
 const DraggableManualLink = lazy(() => import("../pages/DraggableManualLink"));
 
 function Routes() {
@@ -44,7 +47,11 @@ function Routes() {
           <Route path="/ReactDraggableLink" component={ReactDraggableLink} />
           <Route path="/ReactDragDrop" component={ReactDragDrop} />
           <Route path="/ReactGoJS" component={ReactGoJS} />
-          <Route path="/ReactDragDropTreeLayout" component={ReactDragDropTreeLayout} />
+          <Route path="/ReactTreeLayout" component={ReactTreeLayout} />
+          <Route
+            path="/ReactDragDropTreeLayout"
+            component={ReactDragDropTreeLayout}
+          />
           <Route path="/DraggableManualLink" component={DraggableManualLink} />
         </Switch>
       </Suspense>
