@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-16 17:24:20
- * @LastEditTime: 2021-06-29 20:36:16
+ * @LastEditTime: 2021-06-29 21:16:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/pages/LogicFlow/index.js
@@ -31,6 +31,7 @@ class Index extends React.Component {
     };
     let key = this.getUuid();
     this.state = {
+      scale: 1,
       nodeDataArray: [
         {
           // xy: "0 0",
@@ -1910,6 +1911,11 @@ class Index extends React.Component {
     );
   };
   initDiagram = () => {
+    const {
+      minScale, // 最小放大值
+      maxScale, // 最小放大值
+    } = this.props;
+
     const $ = go.GraphObject.make;
 
     this.$ = $;
@@ -1979,6 +1985,16 @@ class Index extends React.Component {
         linkKeyProperty: "key", // IMPORTANT! must be defined for merges and data sync when using GraphLinksModel
       }),
     });
+
+    this.myDiagram.minScale = minScale; // 最小放大值
+    this.myDiagram.maxScale = maxScale; // 最小放大值
+    // Overview
+    let myOverview = $(
+      go.Overview,
+      "myOverviewDiv", // the HTML DIV element for the Overview
+
+      { observed: myDiagram, contentAlignment: go.Spot.Center }
+    ); // tell it which Diagram to show and pan
 
     // 当文档被修改时，添加一个“*”到标题并启用“保存”按钮
     // when the document is modified, add a "*" to the title and enable the "Save" button
@@ -2092,7 +2108,7 @@ class Index extends React.Component {
     });
   };
   render() {
-    const { nodeDataArray, linkDataArray } = this.state;
+    const { nodeDataArray, linkDataArray, scale } = this.state;
     return (
       <div>
         <LeftDrawer>
@@ -2140,9 +2156,9 @@ class Index extends React.Component {
           </div>
         </LeftDrawer>
         {/*    <i className="fa fa-plus-circle" aria-hidden="true"></i>*/}
-        <div className="diagram-box">
-          <div>
-            <div
+        <div>
+          <div className="diagram-box">
+            {/*  <div
               id="myPaletteDiv"
               style={{
                 width: "105px",
@@ -2151,7 +2167,7 @@ class Index extends React.Component {
                 border: "solid 1px black",
               }}
             ></div>
-            {/*
+         
          <div
               id="myDiagramDiv"
               style={{
@@ -2160,6 +2176,8 @@ class Index extends React.Component {
                 height: "800px",
               }}
             ></div>   */}
+
+            <div id="myOverviewDiv"></div>
 
             <ReactDiagram
               initDiagram={this.initDiagram}
@@ -2172,7 +2190,6 @@ class Index extends React.Component {
               onModelChange={() => {}}
             />
           </div>
-
           <Button
             onClick={() => {
               this.myDiagram.commandHandler.zoomToFit();
@@ -2184,6 +2201,10 @@ class Index extends React.Component {
           <Button
             onClick={() => {
               // this.myDiagram.commandHandler.zoomToFit();
+              this.setState({
+                scale: 1,
+              });
+
               this.myDiagram.scale = 1;
               this.myDiagram.commandHandler.scrollToPart(
                 this.myDiagram.findNodeForKey(1)
@@ -2192,6 +2213,34 @@ class Index extends React.Component {
           >
             Center on root
           </Button>
+          <Button
+            onClick={() => {
+              // this.myDiagram.commandHandler.zoomToFit();
+              this.setState({
+                scale: 10,
+              });
+              this.myDiagram.scale = 10;
+              this.myDiagram.commandHandler.scrollToPart(
+                this.myDiagram.findNodeForKey(10)
+              );
+            }}
+          >
+            放大
+          </Button>
+          <input
+            onChange={({ target: { value } }) => {
+              this.setState({
+                scale: value,
+              });
+              this.myDiagram.scale = value / 20;
+              this.myDiagram.commandHandler.scrollToPart(
+                this.myDiagram.findNodeForKey(value / 20)
+              );
+              console.log("value=", value);
+            }}
+            type="range"
+            value={scale}
+          />
           <div>
             <textarea
               id="mySavedModel"
@@ -2207,5 +2256,8 @@ class Index extends React.Component {
     );
   }
 }
-
+Index.defaultProps = {
+  minScale: 1, // 最小放大值
+  maxScale: 20, // 最小放大值
+};
 export default Index;
