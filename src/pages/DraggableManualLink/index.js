@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-16 17:24:20
- * @LastEditTime: 2021-06-29 21:16:49
+ * @LastEditTime: 2021-06-30 10:24:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /antd-rcfom/src/pages/LogicFlow/index.js
@@ -32,6 +32,7 @@ class Index extends React.Component {
     let key = this.getUuid();
     this.state = {
       scale: 1,
+      overviewFlag: true,
       nodeDataArray: [
         {
           // xy: "0 0",
@@ -2108,7 +2109,7 @@ class Index extends React.Component {
     });
   };
   render() {
-    const { nodeDataArray, linkDataArray, scale } = this.state;
+    const { nodeDataArray, linkDataArray, scale, overviewFlag } = this.state;
     return (
       <div>
         <LeftDrawer>
@@ -2177,7 +2178,12 @@ class Index extends React.Component {
               }}
             ></div>   */}
 
-            <div id="myOverviewDiv"></div>
+            <div
+              style={{
+                display: overviewFlag ? "block" : "none",
+              }}
+              id="myOverviewDiv"
+            ></div>
 
             <ReactDiagram
               initDiagram={this.initDiagram}
@@ -2192,11 +2198,23 @@ class Index extends React.Component {
           </div>
           <Button
             onClick={() => {
-              this.myDiagram.commandHandler.zoomToFit();
+              this.setState({
+                overviewFlag: !overviewFlag,
+              });
+               
             }}
           >
-            {" "}
-            Zoom to Fit
+            {overviewFlag ? "关闭" : "打开"}略缩图
+          </Button>
+          <Button
+            onClick={() => {
+              this.myDiagram.commandHandler.zoomToFit();
+              setTimeout(() => {
+                console.log("this.myDiagram.scale=", this.myDiagram.scale);
+              }, 1000);
+            }}
+          >
+            全景查看
           </Button>
           <Button
             onClick={() => {
@@ -2211,36 +2229,25 @@ class Index extends React.Component {
               );
             }}
           >
-            Center on root
+            居中查看
           </Button>
-          <Button
-            onClick={() => {
-              // this.myDiagram.commandHandler.zoomToFit();
-              this.setState({
-                scale: 10,
-              });
-              this.myDiagram.scale = 10;
-              this.myDiagram.commandHandler.scrollToPart(
-                this.myDiagram.findNodeForKey(10)
-              );
-            }}
-          >
-            放大
-          </Button>
+          缩小
           <input
             onChange={({ target: { value } }) => {
               this.setState({
                 scale: value,
               });
               this.myDiagram.scale = value / 20;
+              // this.myDiagram.scrollToRect( this.myDiagram.findNodeForKey(0).actualBounds);
               this.myDiagram.commandHandler.scrollToPart(
-                this.myDiagram.findNodeForKey(value / 20)
+                this.myDiagram.findNodeForKey(1)
               );
               console.log("value=", value);
             }}
             type="range"
             value={scale}
           />
+          放大
           <div>
             <textarea
               id="mySavedModel"
